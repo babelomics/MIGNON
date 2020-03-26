@@ -1,4 +1,4 @@
-# MIGNON<img src="pics/icon.png" align="right" height="200" />
+# MIGNON<img src="pics/icon.png" align="right" height="200"/>
 
 **Mechanistic InteGrative aNalysis Of rNa-seq data**
 
@@ -10,14 +10,14 @@ This repository contains all the neccesary code to execute **MIGNON**, a bioinfo
 2. [Java (v1.8.0)](https://java.com/en/download/help/download_options.xml). To use cromwell.
 3. [Cromwell](https://github.com/broadinstitute/cromwell/releases). To interpret and execute the workflow.
 
-## Execution modes
+## Quick Start
 
-| Execution mode  | Description                                                                                                                                                                                      |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| "salmon-hisat2" | Alignment with HISAT2. Count table obtained from Salmon quantifications. Deals with multi-mapping reads. Allows variant calling. Low memory consumption during alignment, but slower than STAR.  |
-| "salmon-star"   | Alignment with STAR. Count table obtained from Salmon quantifications. Deals with multi-mapping reads. Allows variant calling. High memory consumption during alignment, but faster than HISAT2. |
-| "hisat2"        | Alignment with HISAT2. Count table obtained with featureCounts. Does not deal with multi-mapping reads. Allows variant calling. Low memory consumption during alignment, but slower than STAR.   |
-| "star"          | Alignment with STAR. Count table obtained with featureCounts. Does not deal with multi-mapping reads. Allows variant calling. High memory consumption during alignment, but faster than HISAT2.  |
-| "salmon"        | Count table obtained from Salmon quantifications. Deals with multi-mapping reads. Does not allow variant calling.                                                                                |
+```
+git clone https://github.com/babelomics/MIGNON.git
 
-We strongly recommend to use the combined execution strategies “salmon-star” or “salmon-hisat2”, as they use the pseudo-alignment strategy to quantify gene expression dealing with multi-mapping reads, and star or hisat2 to obtain the alignments for the variant calling sub-workflow.
+cd MIGNON
+
+bash example_run.sh
+```
+
+For more information about how the execution parameters of MIGNON, please visit the [MIGNON TUTORIAL](https://babelomics.github.io/MIGNON/tutorial.html).

@@ -1,0 +1,23 @@
+{
+  "MIGNON.execution_mode": "salmon-star",
+  "MIGNON.is_paired_end": true,
+  "MIGNON.do_vc": "true",
+  "MIGNON.input_fastq_r1": ["flagForR1Files"],
+  "MIGNON.input_fastq_r2": ["flagForR2Files"],
+  "MIGNON.sample_id": ["flagForSample"],
+  "MIGNON.group": ["flagForGroup"],
+  "MIGNON.gtf_file": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/gtf/Homo_sapiens.GRCh38.95.gtf",
+  "MIGNON.salmon_index_path": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/salmon_index/cdna/",
+  "MIGNON.star_index_path": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/star_index/",
+  "MIGNON.vep_cache_dir": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/vep_cache",
+  "MIGNON.ref_fasta": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/fasta/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa",
+  "MIGNON.ref_fasta_index": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/fasta/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa.fai",
+  "MIGNON.ref_dict": "/mnt/lustre/scratch/CBRA/research/pipelines/rna_seq_pipeline/genomes_and_annotations/GRCh38_p12/fasta/Homo_sapiens.GRCh38.dna_rm.primary_assembly.dict",
+  "MIGNON.db_snp_vcf": "/mnt/lustre/scratch/CBRA/data/gatk_resources/GRCh38/All_20170710.vcf.gz",
+  "MIGNON.db_snp_vcf_index": "/mnt/lustre/scratch/CBRA/data/gatk_resources/GRCh38/All_20170710.vcf.gz.tbi",
+  "MIGNON.edger_script": "flagForCurrentDir/scripts/edgeR.r",
+  "MIGNON.tximport_script": "flagForCurrentDir/scripts/tximport.r",
+  "MIGNON.hipathia_script": "flagForCurrentDir/scripts/hipathia.r",
+  "MIGNON.ensemblTx_script": "flagForCurrentDir/scripts/ensembldb.r"
+}
+
