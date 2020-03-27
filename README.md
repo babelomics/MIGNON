@@ -1,23 +1,23 @@
-# MIGNON<img src="pics/icon.png" align="right" height="200"/>
+# MIGNON<img src="pics/icon.png" align="right" height="100"/>
 
-**Mechanistic InteGrative aNalysis Of rNa-seq data**
+[![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/martingarridorc/MIGNON)
 
-This repository contains all the neccesary code to execute **MIGNON**, a bioinformatic workflow for the analysis of RNA-Seq data capable of integrating genomic and transcriptomic information into mechanistic signaling circuits. It covers the whole process using state-of-the-art tools and is deployable in under different computational environments. By using an in-silico knockdown strategy, it calculates the signaling circuit activities from gene expression and genomic variants using raw reads as input.
+_**M**echanistic **I**nte**G**rative a**N**alysis **O**f r**N**a-seq data_
+
+This repository contains all the neccesary code to execute **MIGNON**, a bioinformatic workflow for the analysis of RNA-Seq data capable of integrating genomic and transcriptomic information into mechanistic signaling circuits. It covers the whole process using state-of-the-art tools and is deployable in under different computational environments. By using an in-silico knockdown strategy, it calculates the signaling circuit activities from gene expression and genomic variants using raw reads as input. It is written using the [Workflow Description Language (WDL)](https://github.com/openwdl/wdl) and can be executed using [Cromwell](https://github.com/broadinstitute/cromwell) and [Docker](https://www.docker.com/).
 
 ## Dependencies
 
-1. [Docker](https://www.docker.com/). To execute all the containerized software.
-2. [Java (v1.8.0)](https://java.com/en/download/help/download_options.xml). To use cromwell.
-3. [Cromwell](https://github.com/broadinstitute/cromwell/releases). To interpret and execute the workflow.
+1. [Docker](https://www.docker.com/).
+2. [Java (v1.8.0)](https://java.com/en/download/help/download_options.xml).
+3. [Cromwell](https://github.com/broadinstitute/cromwell/releases).
 
 ## Quick Start
 
 ```
-git clone https://github.com/babelomics/MIGNON.git
-
-cd MIGNON
-
-bash example_run.sh
+$ git clone https://github.com/babelomics/MIGNON.git
+$ cd MIGNON
+$ java -jar /path/to/cromwell.jar run /path/to/input.json
 ```
 
-For more information about how the execution parameters of MIGNON, please visit the [MIGNON TUTORIAL](https://babelomics.github.io/MIGNON/tutorial.html).
+For more information about **MIGNON**, please visit the [**documentation**](https://martingarridorc.github.io/MIGNON/index.html).

@@ -103,6 +103,7 @@ workflow MIGNON {
     Array[File?] known_vcfs_indices 
 
     File? intervals
+    File? input_bai
     String? rg_platform = "Unknown"
     String? rg_center = "Unknown"
 
