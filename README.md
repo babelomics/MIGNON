@@ -20,4 +20,4 @@ $ cd MIGNON
 $ java -Dconfig.file=configs/LocalWithDocker.conf -jar /path/to/cromwell.jar run wdl/MIGNON.wdl /path/to/input.json
 ```
 
-For more information about **MIGNON**, please visit the [**documentation**](https://babelomics.github.io/MIGNON/index.html).
+For more information about **MIGNON**, please visit the [**wiki**](https://github.com/babelomics/MIGNON/wiki).
