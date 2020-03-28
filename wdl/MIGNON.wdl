@@ -7,109 +7,80 @@ workflow MIGNON {
     # WORKFLOW VARIABLES #
     ######################
 
-    # samples
+    # required inputs
     Array[File] input_fastq_r1
     Array[File] input_fastq_r2
     Array[String] sample_id
     Array[String] group
     Boolean is_paired_end
     Boolean use_gz = true
-
-    # execution mode
     String execution_mode
     Boolean do_vc
-
-    # annotation
     File gtf_file
-
-    # fastp 
-    Int fastp_windows_size = 4
-    Int fastp_mean_quality = 15
-    Int fastp_required_length = 20
-    Int? fastp_cpu = 4
-    String? fastp_mem = "16G"
-
-    # fastqc 
-    Int? fastqc_cpu = 2
-    String? fastqc_mem = "16G"
-
-    # hisat2
     String? hisat2_index_path
     String? hisat2_index_prefix
     String? hisat2_sample_id
-    Int? hisat2_cpu = 4
-    String? hisat2_mem = "16G"
-
-    # sam2bam
-    Int? sam2bam_cpu = 4
-    String? sam2bam_mem = "16G"
-
-    # star
     String? star_index_path
-    Int? star_cpu = 4
-    String? star_mem = "32G"
-
-    # salmon
     String? salmon_index_path
-    String? salmon_library_type = "A"
-    Int? salmon_cpu = 4
-    String?  salmon_mem = "16G"
-
-    # featureCounts
-    Int? featureCounts_cpu = 4
-    String? featureCounts_mem = "16G"
-
-    # ensemblTx2Gene
-    File? tx2gene_file
-    File? ensemblTx_script
-    Int? ensemblTx_cpu = 1
-    String? ensemblTx_mem = "16G"
-
-    # tximport
-    File? tximport_script
-    Int? tximport_cpu = 1
-    String? tximport_mem = "16G"
-
-    # edger
     File? edger_script
-    Int? edger_min_counts = 15
-    Int? edger_cpu = 1
-    String? edger_mem = "16G"
-
-    # hipathia
+    File? ensemblTx_script
+    File? tximport_script
     File? hipathia_script
-    Boolean? hipathia_normalize = true
-    Float? hipathia_ko_factor = 0.01
-    Int? hipathia_cpu = 1
-    String? hipathia_mem = "16G"
-
-    # vep
     String? vep_cache_dir
-    Float vep_sift_cutoff = 0.05
-    Float vep_polyphen_cutoff = 0.95
-    Int? vep_cpu = 4
-    String? vep_mem = "16G"
-
-    # variant calling
     File? ref_fasta
     File? ref_fasta_index
     File? ref_dict
-    File? ref_gz_index
-
     File? db_snp_vcf
     File? db_snp_vcf_index
-
     Array[File?] known_vcfs 
     Array[File?] known_vcfs_indices 
 
-    File? intervals
-    File? input_bai
+    # execution inputs
+    Int? fastp_cpu = 4
+    String? fastp_mem = "16G"
+    Int? fastqc_cpu = 2
+    String? fastqc_mem = "16G"
+    Int? hisat2_cpu = 4
+    String? hisat2_mem = "16G"
+    Int? sam2bam_cpu = 4
+    String? sam2bam_mem = "16G"
+    Int? star_cpu = 4
+    String? star_mem = "32G"
+    Int? salmon_cpu = 4
+    String?  salmon_mem = "16G"
+    Int? featureCounts_cpu = 4
+    String? featureCounts_mem = "16G"
+    Int? vep_cpu = 4
+    String? vep_mem = "16G"
+    Int? haplotype_scatter_count = 1
+
+    # other inputs 
+    Int fastp_windows_size = 4
+    Int fastp_mean_quality = 15
+    Int fastp_required_length = 20
+    String? salmon_library_type = "A"
+    File? tx2gene_file    
+    Int? edger_min_counts = 15  
+    Boolean? hipathia_normalize = true
+    Float? hipathia_ko_factor = 0.01    
+    Float vep_sift_cutoff = 0.05
+    Float vep_polyphen_cutoff = 0.95    
+
+    # required defaults
+    Int? ensemblTx_cpu = 1
+    String? ensemblTx_mem = "16G"
+    Int? edger_cpu = 1
+    String? edger_mem = "16G"
+    Int? tximport_cpu = 1
+    String? tximport_mem = "16G"
+    Int? hipathia_cpu = 1
+    String? hipathia_mem = "16G"
     String? rg_platform = "Unknown"
     String? rg_center = "Unknown"
-
     Int? min_confidence_for_variant_calling 
-
-    Int? haplotype_scatter_count = 10
+    File? ref_gz_index
+    File? intervals
+    File? input_bai
 
     ############################
     # TASK CALLER
