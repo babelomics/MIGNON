@@ -1,6 +1,10 @@
-# Execution modes
+---
+layout: default
+title: Execution modes
+nav_order: 3
+---
 
-Regarding the execution of the workflow, as explained in the **tool manuscript**, we have designed 5 modes of execution that make use of different tools in crucial steps of the workflow: 
+Regarding the execution of the workflow, as explained in the **tool manuscript**, we have designed 5 execution modes that make use of different tools in crucial steps of the workflow: 
 
 | Execution mode  | Alignment | Quantification | Allows Variant Calling | Computational Profile                        |
 |-----------------|-----------|----------------|------------------------|----------------------------------------------|
@@ -14,4 +18,4 @@ We strongly recommend to use the combined execution modes “salmon-star” or �
 
 The following figure exemplifies the different execution modes, as well as the tools used in each of them, being: 1) “salmon”, 2) “salmon-hisat2”, 3) “salmon-star”, 4) “hisat2”, 5) “star”.
 
-<img width="500" alt="portfolio_view" align="middle" src="https://github.com/babelomics/MIGNON/blob/master/pics/execution_modes.png?raw=true">
+![execution_modes](pics/execution_modes.png)

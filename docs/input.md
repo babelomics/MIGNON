@@ -1,6 +1,10 @@
-# Input
+---
+layout: default
+title: Input
+nav_order: 2
+---
 
-As explained by [WDL authors](https://github.com/openwdl/wdl/blob/master/versions/development/SPEC.md#specifying-workflow-inputs-in-json), cromwell uses a [JSON](https://www.json.org/) formatted file as input. We have prepared a list of JSON files with the minimum required inputs for each execution mode. They can be found at the [input_templates](https://github.com/babelomics/MIGNON/input_templates/) folder. From a general perspective the MIGNON inputs can be divided into three categories: Required inputs, execution parameters and other inputs.
+As explained by [WDL authors](https://github.com/openwdl/wdl/blob/master/versions/development/SPEC.md#specifying-workflow-inputs-in-json), cromwell uses a [JSON](https://www.json.org/) formatted file as input. We have prepared a list of JSON files with the minimum required inputs for each execution mode. They can be found at the [input_templates](https://github.com/babelomics/MIGNON/tree/master/input_templates) folder. From a general perspective the MIGNON inputs can be divided into three categories: Required inputs, execution parameters and other inputs.
 
 ## Required inputs
 
@@ -35,6 +39,7 @@ The inputs detailed in this section are mandatory and will vary depending on the
 | hipathia_script     | All                                             | File          | -           | Included in MIGNON.                                                                                                   |
 | ensemblTx_script    | "salmon", "salmon-star", "salmon-hisat2"        | File          | -           | Included in MIGNON.                                                                                                   |
 
+
 ### Description
 
 * **is_paired_end**: Are input reads paired-end?
@@ -62,7 +67,7 @@ The inputs detailed in this section are mandatory and will vary depending on the
 * **hipathia_script**: Script executed in the hiPathia task.
 * **ensemblTx_script**: Script executed in the ensembldb task. It transforms the provided GTF into a Tx2Gene file used by tximport.
 
-## Execution inputs
+## Execution parameters
 
 The following list contains the input parameters that can be used to control the number of CPUs and memory assigned to the container and the process where the task is executed. We will only list parameters that **really have an impact on the task execution**, that is, those parameters that are actually passed not only to the runtime of the WDL task, but also to the command that runs the operation.
 
@@ -90,9 +95,9 @@ The following list contains the input parameters that can be used to control the
 
 ### Description
 
-For all the above inputs, the **cpu** and **mem** parameters are directly passed to the container that executes each task. On the other hand, the **cpu** parameter is also passed to the argument that control the multi-threading on each tool. Before modifying any of this parameters, please check the [parallelization section](), as we have already tested 6 different CPU configurations for each of the above tasks and it can provide a useful insight for the user's workflow deployments.
+For all the above inputs, the **cpu** and **mem** parameters are directly passed to the container that executes each task. On the other hand, the **cpu** parameter is also passed to the argument that control the multi-threading on each tool. Before modifying any of this parameters, please check the parallelization section.
 
-In this sense, the **haplotype_scatter_count** input requires a special mention. As explained in the **parallelization**, this parameter allows to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divide to perform the variant calling from aligned reads.
+The **haplotype_scatter_count** input requires a special mention. As explained in the parallelization section, this parameter allows to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divide to perform the variant calling from aligned reads.
 
 ## Other inputs
 

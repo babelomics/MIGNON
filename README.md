@@ -1,6 +1,6 @@
-# MIGNON<img src="pics/icon.png" align="right" height="180"/>
+# MIGNON
 
-[![Build Status, pointing to dev repo until travis enabled here](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
+[![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/martingarridorc/MIGNON)
 
 _**M**echanistic **I**nte**G**rative a**N**alysis **O**f r**N**a-seq data_
 
@@ -8,9 +8,9 @@ This repository contains all the necessary code to execute **MIGNON**, a bioinfo
 
 ## Dependencies
 
-1. [Docker](https://www.docker.com/)
-2. [Java (v1.8.0)](https://java.com/en/download/help/download_options.xml)
-3. [Cromwell](https://github.com/broadinstitute/cromwell/releases)
+1. [Docker](https://www.docker.com/).
+2. [Java (v1.8.0)](https://java.com/en/download/help/download_options.xml).
+3. [Cromwell](https://github.com/broadinstitute/cromwell/releases).
 
 ## Quick Start
 
@@ -20,4 +20,4 @@ $ cd MIGNON
 $ java -Dconfig.file=configs/LocalWithDocker.conf -jar /path/to/cromwell.jar run wdl/MIGNON.wdl /path/to/input.json
 ```
 
-For more information about **MIGNON**, please visit the [**wiki**](https://github.com/babelomics/MIGNON/wiki).
+For more information about **MIGNON**, please visit the [**documentation**](https://martingarridorc.github.io/MIGNON/).

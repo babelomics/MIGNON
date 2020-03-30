@@ -1,8 +1,12 @@
-# Parallelization
+---
+layout: default
+title: Parallelization
+nav_order: 5
+---
 
-MIGNON itself does not implement an engine to parallelize the tasks. Instead, it relies on the intrinsic ability of each tool of using multi-threading and in the ability of [Cromwell](https://github.com/broadinstitute/cromwell) to launch a number of parallel jobs through the **concurrent-job-limit** parameter of the [config files](https://github.com/babelomics/MIGNON/tree/master/configs). We encourage users to read [cromwell parallelism post](Parallelism-Multithreading-Scatter-Gather), as it depicts the levels at which the execution of a workflow can be done in parallel. Overall, there are two levels at which MIGNON allows the use of parallel executions:
+MIGNON does not implement an engine to parallelize the tasks. Instead, it relies on the intrinsic ability of each tool to use multi-threading and in the ability of [Cromwell](https://github.com/broadinstitute/cromwell) to launch a number of parallel jobs through the **concurrent-job-limit** parameter of the [config file](https://github.com/babelomics/MIGNON/tree/master/configs). We encourage users to read [cromwell parallelism post](Parallelism-Multithreading-Scatter-Gather), as it depicts the levels at which the execution of a workflow can be done in parallel. Overall, there are two levels at which MIGNON allows the use of parallel executions:
 
-## Parallel jobs at Cromwell execution level
+## Parallel jobs
 
 ### Sample-level
 
@@ -14,4 +18,4 @@ As explained in the **input** section, there is an input parameter (**haplotype_
 
 ## Multi-thread tools
 
-For those tools that allow multi-threading, we have included workflow inputs that are directly passed to the tool parameter that control such multi-threading. Additionally, for those tasks, we have performed a study of the performance of the tools under 6 different CPU configurations, which are depicted in the **workflow manuscript**. In brief, some tools that allow multi-threading considerably speed up in correlation with the the number of CPUs. However, in our opinion, from 8 cpus up, the reduction on execution time is not worth for the number of CPUs used.
+For those tools that allow multi-threading, we have included workflow-level inputs that are directly passed to the tool parameter that control such multi-threading. Additionally, for those tasks, we have performed a study of the performance of the tools under 6 different CPU configurations, which are depicted in the **workflow manuscript**. In brief, tools that allow multi-threading considerably speed up in correlation with the the number of CPUs. However, in our opinion, from 8 cpus up, the reduction on execution time is not worth for the number of CPUs used.
