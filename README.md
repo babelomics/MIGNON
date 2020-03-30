@@ -1,6 +1,6 @@
 # MIGNON
 
-[![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/martingarridorc/MIGNON)
+[![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
 _**M**echanistic **I**nte**G**rative a**N**alysis **O**f r**N**a-seq data_
 
@@ -20,4 +20,4 @@ $ cd MIGNON
 $ java -Dconfig.file=configs/LocalWithDocker.conf -jar /path/to/cromwell.jar run wdl/MIGNON.wdl /path/to/input.json
 ```
 
-For more information about **MIGNON**, please visit the [**documentation**](https://martingarridorc.github.io/MIGNON/).
+For more information about **MIGNON**, please visit the [**documentation**](https://babelomics.github.io/MIGNON/).
