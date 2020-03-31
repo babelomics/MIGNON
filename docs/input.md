@@ -4,6 +4,8 @@ title: Input
 nav_order: 2
 ---
 
+# Input
+
 As explained by [WDL authors](https://github.com/openwdl/wdl/blob/master/versions/development/SPEC.md#specifying-workflow-inputs-in-json), cromwell uses a [JSON](https://www.json.org/) formatted file as input. We have prepared a list of JSON files with the minimum required inputs for each execution mode. They can be found at the [input_templates](https://github.com/babelomics/MIGNON/tree/master/input_templates) folder. From a general perspective the MIGNON inputs can be divided into three categories: Required inputs, execution parameters and other inputs.
 
 ## Required inputs

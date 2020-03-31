@@ -4,6 +4,8 @@ title: Output
 nav_order: 4
 ---
 
+# Output
+
 As described in the **tool manuscript**, the main output of the workflow consists on two files, which can be found in the **call-hipathia** task directory created by [Cromwell](https://github.com/broadinstitute/cromwell).
 
 ## Circuit activity matrix 

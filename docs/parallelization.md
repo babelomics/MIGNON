@@ -4,6 +4,8 @@ title: Parallelization
 nav_order: 5
 ---
 
+# Parallelization
+
 MIGNON does not implement an engine to parallelize the tasks. Instead, it relies on the intrinsic ability of each tool to use multi-threading and in the ability of [Cromwell](https://github.com/broadinstitute/cromwell) to launch a number of parallel jobs through the **concurrent-job-limit** parameter of the [config file](https://github.com/babelomics/MIGNON/tree/master/configs). We encourage users to read [cromwell parallelism post](Parallelism-Multithreading-Scatter-Gather), as it depicts the levels at which the execution of a workflow can be done in parallel. Overall, there are two levels at which MIGNON allows the use of parallel executions:
 
 ## Parallel jobs

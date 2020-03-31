@@ -4,7 +4,7 @@ title: Installation
 nav_order: 1
 ---
 
-## Installation
+# Installation
 
 In order to execute the workflow, the user needs to be able of launching the [Cromwell](https://github.com/broadinstitute/cromwell) engine, regardless of where it is deployed. It is recommended to read the [Five Minutes Intro](https://cromwell.readthedocs.io/en/stable/tutorials/FiveMinuteIntro/) created by the Broad Institute team, which explain the basic operations that can be performed using their software. Additionally, as the tools employed by the workflow are used as [docker](https://www.docker.com/) containers, the system where the pipeline is deployed should have an engine to work with containerized software. We have tested the workflow both locally with [Docker](https://www.docker.com/) and in a High Performance Computing (HPC) environment, executing the containers as [Singularity](https://sylabs.io/guides/3.5/user-guide/) images. Theoretically, it is also deployable within the [Terra](https://terra.bio/) platform, which makes use of cloud computing services to execute the WDL workflows.
 

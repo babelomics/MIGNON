@@ -4,6 +4,8 @@ title: Execution modes
 nav_order: 3
 ---
 
+# Execution modes
+
 Regarding the execution of the workflow, as explained in the **tool manuscript**, we have designed 5 execution modes that make use of different tools in crucial steps of the workflow: 
 
 | Execution mode  | Alignment | Quantification | Allows Variant Calling | Computational Profile                        |
