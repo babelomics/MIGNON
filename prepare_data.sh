@@ -1,75 +1,72 @@
+if [ ! -d "MIGNON_example" ]; then mkdir -p MIGNON_example; fi
+cd MIGNON_example
+
 #### REFERENCE DATA ####
-download="true"
+echo "Downloading reference data and example reads..."
 
+cromwellJar="https://github.com/broadinstitute/cromwell/releases/download/47/cromwell-47.jar"
+refGenome="ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa.gz"
+refGtf="ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.chr.gtf.gz"
+refCDna="ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz"
+vepCache="ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/homo_sapiens_vep_99_GRCh38.tar.gz"
+refDbSnp="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz"
+refDbSnpIndex="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi"
 
-if [ $download == "true" ]; then
-    echo "Downloading reference data and example reads..."
+#### EXAMPLE READS ####
+control1="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/006/ERR3761156/ERR3761156.fastq.gz"
+control2="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/007/ERR3761157/ERR3761157.fastq.gz"
+control3="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/008/ERR3761158/ERR3761158.fastq.gz"
+problem1="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/009/ERR3761159/ERR3761159.fastq.gz"
+problem2="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/000/ERR3761160/ERR3761160.fastq.gz"
+problem3="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/001/ERR3761161/ERR3761161.fastq.gz"
 
-    cromwellJar="https://github.com/broadinstitute/cromwell/releases/download/47/cromwell-47.jar"
-    refGenome="ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_rm.primary_assembly.fa.gz"
-    refGtf="ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.chr.gtf.gz"
-    refCDna="ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz"
-    vepCache="ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/homo_sapiens_vep_99_GRCh38.tar.gz"
-    refDbSnp="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz"
-    refDbSnpIndex="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi"
+#### DOWNLOAD ####
+urls=(
+    $cromwellJar
+    $refGenome
+    $refGtf
+    $refCDna
+    $vepCache
+    $refDbSnp
+    $refDbSnpIndex
+    $control1
+    $control2
+    $control3
+    $problem1
+    $problem2
+    $problem3
+)
+names=(
+    "cromwell-47.jar"
+    "genome.fa.gz"
+    "Homo_sapiens.GRCh38.99.chr.gtf.gz"
+    "cdna.fa.gz"
+    "vepCache.tar.gz"
+    "dbSnp.vcf.gz"
+    "dbSnp.vcf.gz.tbi"
+    "c1.fastq.gz"
+    "c2.fastq.gz"
+    "c3.fastq.gz"
+    "p1.fastq.gz"
+    "p2.fastq.gz"
+    "p3.fastq.gz"
+)
 
-    #### EXAMPLE READS ####
-    control1="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/006/ERR3761156/ERR3761156.fastq.gz"
-    control2="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/007/ERR3761157/ERR3761157.fastq.gz"
-    control3="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/008/ERR3761158/ERR3761158.fastq.gz"
-    problem1="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/009/ERR3761159/ERR3761159.fastq.gz"
-    problem2="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/000/ERR3761160/ERR3761160.fastq.gz"
-    problem3="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/001/ERR3761161/ERR3761161.fastq.gz"
+l=$((${#urls[@]}-1))
 
-    #### DOWNLOAD ####
-    urls=(
-        $cromwellJar
-        $refGenome
-        $refGtf
-        $refCDna
-        $vepCache
-        $refDbSnp
-        $refDbSnpIndex
-        $control1
-        $control2
-        $control3
-        $problem1
-        $problem2
-        $problem3
-    )
-    names=(
-        "cromwell-47.jar"
-        "genome.fa.gz"
-        "Homo_sapiens.GRCh38.99.chr.gtf.gz"
-        "cdna.fa.gz"
-        "vepCache.tar.gz"
-        "dbSnp.vcf.gz"
-        "dbSnp.vcf.gz.tbi"
-        "c1.fastq.gz"
-        "c2.fastq.gz"
-        "c3.fastq.gz"
-        "p1.fastq.gz"
-        "p2.fastq.gz"
-        "p3.fastq.gz"
-    )
-
-    l=$((${#urls[@]}-1))
-
-    for i in $(seq 0 $l); do 
-        u=${urls[$i]}
-        f=${names[$i]}
-        if [ ! -f $f ]; then 
-            echo "========================"
-            echo "Downloading $f ..."
-            echo "From URL $u..."
-            echo "========================"
-            curl -L --retry 10 --ftp-method nocwd -o $f $u
-        else
-            echo "$f found in this directory, skipping to the next file..."
-        fi
-    done
-
-fi
+for i in $(seq 0 $l); do 
+    u=${urls[$i]}
+    f=${names[$i]}
+    if [ ! -f $f ]; then 
+        echo "========================"
+        echo "Downloading $f ..."
+        echo "From URL $u..."
+        echo "========================"
+        curl -L --retry 10 --ftp-method nocwd -o $f $u
+    else
+        echo "$f found in this directory, skipping to the next file..."
+    fi
+done
 
 #### DECOMPRESS ####
 if [ ! -f "genome.fa" ]; then 
