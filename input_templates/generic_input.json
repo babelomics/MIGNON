@@ -1,0 +1,30 @@
+{
+     
+    "MIGNON.execution_mode": "flagForMode",
+    "MIGNON.is_paired_end": "flagForIsPe",
+    "MIGNON.do_vc": "flagForDoVc",
+    "MIGNON.input_fastq_r1": ["flagForR1"],
+    "MIGNON.input_fastq_r2": ["flagForR2"],
+    "MIGNON.sample_id": ["flagForSampleId"],
+    "MIGNON.group": ["flagForGroup"],
+    "MIGNON.gtf_file": "flagForGTFFile",
+    "MIGNON.star_index_path": "flagForStarIndex",
+    "MIGNON.salmon_index_path": "flagForSalmonIndex",
+    "MIGNON.hisat2_index_path": "flagForHisatIndexPath",
+    "MIGNON.hisat2_index_prefix": "flagForHisatIndexPrefix",
+    "MIGNON.vep_cache_dir": "flagForVepCache",
+    "MIGNON.ref_fasta": "flagForRefFasta",
+    "MIGNON.ref_fasta_index": "flagForRefFastaIndex",
+    "MIGNON.ref_dict": "flagForRefFastaDict",
+    "MIGNON.db_snp_vcf": "flagForDbSnp",
+    "MIGNON.db_snp_vcf_index": "flagForDbSnpIndex",
+    "MIGNON.known_vcfs":["flagForKnownVcfs"],
+    "MIGNON.known_vcfs_indices": ["flagForKnownVcfsIndex"],
+    "MIGNON.edger_script": "flagForEdgeRScript",
+    "MIGNON.tximport_script": "flagForTxImportScript",
+    "MIGNON.hipathia_script": "flagForHipathiaScript",
+    "MIGNON.ensemblTx_script": "flagForEnsemblTxScript"
+
+  }
+  
+  
