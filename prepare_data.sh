@@ -91,12 +91,14 @@ if [ ! -f "Homo_sapiens.GRCh38.99.chr.gtf" ]; then
     gzip -kd Homo_sapiens.GRCh38.99.chr.gtf.gz
 fi
 
-if [ ! -d "homo_sapiens" ]; then 
+if [ ! -d "vepCache" ]; then 
 
     echo "========================"
     echo "Decompressing variant annotation..."
     echo "========================"
     tar -zxvf vepCache.tar.gz
+    mkdir -p vepCache
+    mv homo_sapiens vepCache
 fi
 
 #### THREADS ####
@@ -175,7 +177,7 @@ inputJson='{\n
     "MIGNON.salmon_index_path": "'$PWD'/salmon_index",\n
     "MIGNON.hisat2_index_path": "'$PWD'/hisat_index",\n
     "MIGNON.hisat2_index_prefix": "genome",\n
-    "MIGNON.vep_cache_dir": "'$PWD'/homo_sapiens/",\n
+    "MIGNON.vep_cache_dir": "'$PWD'/vepCache/",\n
     "MIGNON.ref_fasta": "'$PWD'/genome.fa",\n
     "MIGNON.ref_fasta_index": "'$PWD'/genome.fa.fai",\n
     "MIGNON.ref_dict": "'$PWD'/genome.dict",\n

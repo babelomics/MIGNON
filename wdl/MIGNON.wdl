@@ -342,8 +342,9 @@ workflow MIGNON {
 
     output {
 
-        Array[File] fastqc_reports = fastqc.report_r1
-
+        File signaling_matrix = hipathia.path_values
+        File differential_signaling = hipathia.diff_signaling
+        
     }
 
 

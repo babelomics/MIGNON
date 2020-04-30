@@ -1,4 +1,3 @@
-<div style="text-align: justify"> your-text-here </div>
 # MIGNON
 
 [![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
