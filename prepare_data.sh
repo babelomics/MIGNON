@@ -1,3 +1,7 @@
+# exit when any command fails
+set -e
+
+mignonDir=$PWD
 if [ ! -d "MIGNON_example" ]; then mkdir -p MIGNON_example; fi
 cd MIGNON_example
 
@@ -108,18 +112,15 @@ else
     echo "Fasta index found in this directory, skipping to the next step..."
 fi
 
-if [ ! -f "genome.fa.dict" ]; then 
+if [ ! -f "genome.dict" ]; then 
     echo "========================"
     echo "Creating genome dictionary with samtools.."
     echo "========================"
-    docker run --rm -v $PWD:$PWD -w $PWD $samtoolsDocker samtools dict genome.fa > genome.fa.dict
+    docker run --rm -v $PWD:$PWD -w $PWD $samtoolsDocker samtools dict genome.fa > genome.dict
     echo "Ok"
 else
     echo "Fasta dict found in this directory, skipping to the next step..."
 fi
-
-
-
 
 #### SALMON INDEX ####
 cdna="cdna.fa.gz"
@@ -177,9 +178,13 @@ if [ $starIndex == "true" ]; then
 
 fi
 
+#### PERMISSIONS ####
+
+#chmod -R 777 .
+
 #### PREPARE INPUT JSON ####
 
-template="/home/mgarrido/Desktop/MIGNON/input_templates/generic_input.json"
+template="/media/HDD_3TB/MIGNON/input_templates/generic_input.json"
 
 exampleJson='{\n
     "MIGNON.execution_mode": "salmon-hisat2",\n
@@ -198,27 +203,31 @@ exampleJson='{\n
     "MIGNON.vep_cache_dir": "'$PWD'/homo_sapiens/",\n
     "MIGNON.ref_fasta": "'$PWD'/genome.fa",\n
     "MIGNON.ref_fasta_index": "'$PWD'/genome.fa.fai",\n
-    "MIGNON.ref_dict": "'$PWD'/genome.fa.dict",\n
+    "MIGNON.ref_dict": "'$PWD'/genome.dict",\n
     "MIGNON.db_snp_vcf": "'$PWD'/dbSnp.vcf.gz",\n
     "MIGNON.db_snp_vcf_index": "'$PWD'/dbSnp.vcf.gz.tbi",\n
     "MIGNON.known_vcfs":["'$PWD'/dbSnp.vcf.gz"],\n
     "MIGNON.known_vcfs_indices": ["'$PWD'/dbSnp.vcf.gz.tbi"],\n
-    "MIGNON.edger_script": "/home/mgarrido/Desktop/MIGNON/scripts/edgeR.r",\n
-    "MIGNON.tximport_script": "/home/mgarrido/Desktop/MIGNON/scripts/tximport.r",\n
-    "MIGNON.hipathia_script": "/home/mgarrido/Desktop/MIGNON/scripts/hipathia.r",\n
-    "MIGNON.ensemblTx_script": "/home/mgarrido/Desktop/MIGNON/scripts/ensembldb.r"\n
+    "MIGNON.edger_script": "'$mignonDir'/scripts/edgeR.r",\n
+    "MIGNON.tximport_script": "'$mignonDir'/scripts/tximport.r",\n
+    "MIGNON.hipathia_script": "'$mignonDir'/scripts/hipathia.r",\n
+    "MIGNON.ensemblTx_script": "'$mignonDir'/scripts/ensembldb.r"\n
 }'
 
 echo -e $exampleJson > input.json
 
 #### RUN MIGNON ####
-config="/home/mgarrido/Desktop/MIGNON/configs/LocalWithDocker.conf"
+config="$mignonDir/configs/LocalWithDocker.conf"
 cromwell="$PWD/cromwell-47.jar"
-workflow="/home/mgarrido/Desktop/MIGNON/wdl/MIGNON.wdl"
+workflow="$mignonDir/wdl/MIGNON.wdl"
 input="$PWD/input.json"
 
 echo "========================"
 echo "Running MIGNON with example data..."
+echo "Config: $config"
+echo "Cromwell: $cromwell"
+echo "Workflow: $workflow"
+echo "Input: $input"
 echo "========================"
 
 java -Dconfig.file=$config -jar $cromwell run $workflow -i $input > MIGNON_example.log
