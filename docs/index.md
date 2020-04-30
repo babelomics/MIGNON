@@ -1,3 +1,4 @@
+<div style="text-align: justify"> your-text-here </div>
 # Home
 
 Welcome to MIGNON's documentation!
