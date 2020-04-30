@@ -1,7 +1,10 @@
 # exit when any command fails
 set -e
 
+# store current directory for further executions
 mignonDir=$PWD
+
+# create MIGNON_example directory
 if [ ! -d "MIGNON_example" ]; then mkdir -p MIGNON_example; fi
 cd MIGNON_example
 
@@ -14,7 +17,7 @@ refGtf="ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh3
 refCDna="ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz"
 vepCache="ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/homo_sapiens_vep_99_GRCh38.tar.gz"
 refDbSnp="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz"
-refDbSnpIndex="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi"
+refDbSnpIndex="https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz.tbi"
 
 #### EXAMPLE READS ####
 control1="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/006/ERR3761156/ERR3761156.fastq.gz"
@@ -96,7 +99,7 @@ if [ ! -d "homo_sapiens" ]; then
     tar -zxvf vepCache.tar.gz
 fi
 
-#### PARAMS ####
+#### THREADS ####
 threads=6
 
 #### INDEX REFERENCE FA ####
@@ -154,39 +157,11 @@ else
     echo "HISAT2 index found in this directory, skipping to the next step..."
 fi
 
-
-#### STAR INDEX ####
-starIndex="false"
-
-if [ $starIndex == "true" ]; then
-
-    genome="genome.fa"
-    gtf="Homo_sapiens.GRCh38.99.chr.gtf"
-    starDocker="quay.io/biocontainers/star:2.7.2b--0"
-    script=$(echo "STAR --runThreadN $threads --runMode genomeGenerate --sjdbGTFfile $gtf --genomeDir star_index --genomeFastaFiles $genome")
-
-    if [ ! -d "star_index" ]; then 
-        echo "========================"
-        echo "Indexing genome with STAR..."
-        echo "Preparing index with $threads threads..."
-        echo "========================"
-        #mkdir "star_index"
-        #docker run --rm -v $PWD:$PWD -w $PWD $starDocker $script
-    else
-        echo "STAR index found in this directory, skipping to the next step..."
-    fi
-
-fi
-
-#### PERMISSIONS ####
-
-#chmod -R 777 .
-
 #### PREPARE INPUT JSON ####
 
-template="/media/HDD_3TB/MIGNON/input_templates/generic_input.json"
+template="$mignonDir/generic_input.json"
 
-exampleJson='{\n
+inputJson='{\n
     "MIGNON.execution_mode": "salmon-hisat2",\n
     "MIGNON.is_paired_end": false,\n
     "MIGNON.do_vc": true,\n
@@ -214,7 +189,7 @@ exampleJson='{\n
     "MIGNON.ensemblTx_script": "'$mignonDir'/scripts/ensembldb.r"\n
 }'
 
-echo -e $exampleJson > input.json
+echo -e $inputJson > input.json
 
 #### RUN MIGNON ####
 config="$mignonDir/configs/LocalWithDocker.conf"
@@ -224,6 +199,7 @@ input="$PWD/input.json"
 
 echo "========================"
 echo "Running MIGNON with example data..."
+echo "Logs can be checked at ./MIGNON_example/MIGNON_example.log"
 echo "Config: $config"
 echo "Cromwell: $cromwell"
 echo "Workflow: $workflow"
