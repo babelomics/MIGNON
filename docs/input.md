@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Input
-nav_order: 2
+nav_order: 3
 ---
 
 # Input
@@ -10,7 +10,7 @@ As explained by [WDL authors](https://github.com/openwdl/wdl/blob/master/version
 
 ## Required inputs
 
-The inputs detailed in this section are mandatory and will vary depending on the execution mode. Apart from those more obvious, as the input reads or the sample id, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling. On the "Preferred source" column, we included the references that we used for testing the workflow.
+The inputs detailed in this section are mandatory and will vary depending on the execution mode. Apart from those as the input reads or the sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling. On the "Preferred source" column, we included the sources that we used for testing the workflow.
 
 ### Table
 
