@@ -1,10 +1,10 @@
-# MIGNON
+# MIGNON  <img src="docs/pics/icon.png" align="right" height="200" />
 
 [![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
 _**M**echanistic **I**nte**G**rative a**N**alysis **O**f r**N**a-seq data_
 
-This repository contains all the necessary code to execute **MIGNON**, a bioinformatic workflow for the analysis of RNA-Seq data capable of integrating genomic and transcriptomic information into mechanistic signaling circuits. It covers the whole process using state-of-the-art tools and is deployable in under different computational environments. By using an in-silico knockdown strategy, it calculates the signaling circuit activities from gene expression and genomic variants using raw reads as input. It is written using the [Workflow Description Language (WDL)](https://github.com/openwdl/wdl) and can be executed using [Cromwell](https://github.com/broadinstitute/cromwell) and [Docker](https://www.docker.com/).
+This repository contains all the necessary code to execute **MIGNON**, a bioinformatic workflow for the analysis of RNA-Seq capable of integrating genomic and transcriptomic data into mechanistic signaling circuits. It covers the whole process using state-of-the-art tools and is deployable in under different computational environments. By using an *in-silico* knockdown strategy, it calculates the signaling circuit activities from gene expression and loss-of-function variants using raw reads as input. It is written using the [Workflow Description Language (WDL)](https://github.com/openwdl/wdl) and can be executed using [cromwell](https://github.com/broadinstitute/cromwell) and [docker](https://www.docker.com/) (or other engine able to run docker containers).
 
 ## Dependencies
 

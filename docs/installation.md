@@ -6,17 +6,15 @@ nav_order: 1
 
 # Installation
 
-In order to execute the workflow, the user needs to be able of launching the [Cromwell](https://github.com/broadinstitute/cromwell) engine, regardless of where it is deployed. It is recommended to read the [Five Minutes Intro](https://cromwell.readthedocs.io/en/stable/tutorials/FiveMinuteIntro/) created by the Broad Institute team, which explain the basic operations that can be performed using their software. Additionally, as the tools employed by the workflow are used as [docker](https://www.docker.com/) containers, the system where the pipeline is deployed should have an engine to work with containerized software. We have tested the workflow both locally with [Docker](https://www.docker.com/) and in a High Performance Computing (HPC) environment, executing the containers as [Singularity](https://sylabs.io/guides/3.5/user-guide/) images. Theoretically, it is also deployable within the [Terra](https://terra.bio/) platform, which makes use of cloud computing services to execute the WDL workflows.
+In order to execute the workflow, the user needs to be able of launching the [cromwell](https://github.com/broadinstitute/cromwell) engine, regardless of where it is deployed. It is recommended to read the [five minutes intro](https://cromwell.readthedocs.io/en/stable/tutorials/FiveMinuteIntro/) created by the Broad Institute team, which explain the basic operations that can be performed using their software. Additionally, as the tools employed by the workflow are used as [docker](https://www.docker.com/) containers, the system where the pipeline is deployed should have an engine able to run the containerized software. We have tested the workflow both locally with [docker](https://www.docker.com/) and in a High Performance Computing (HPC) environment, executing the containers with [singularity](https://sylabs.io/guides/3.5/user-guide/). Theoretically, it is also deployable within the [terra](https://terra.bio/) platform, which makes use of cloud computing services to execute WDL workflows.
 
-**Key links**:
+**Requirements**:
 
-* [Java](https://www.java.com/es/download/)
+* [Java (v.1.8.0)](https://www.java.com/es/download/)
 * [Cromwell releases](https://github.com/broadinstitute/cromwell/releases)
 * [Docker](https://www.docker.com/)
-* [Singularity](https://sylabs.io/docs/)
 
-
-In order to execute MIGNON with Cromwell, we have prepared two configuration files to run the workflow both locally and in a Slurm + Singularity HPC environment. They can be found at the [config directory](https://github.com/babelomics/MIGNON/tree/master/configs). After preparing the input and downloading the Cromwell jar, users can clone the repository:
+In order to execute MIGNON with cromwell, we have prepared two configuration files to run the workflow both locally and in a Slurm + Singularity HPC environment. They can be found at the [config directory](https://github.com/babelomics/MIGNON/tree/master/configs). After preparing the input and downloading the cromwell jar, users can clone the repository:
 
 ```
 $ git clone https://github.com/babelomics/MIGNON.git
@@ -34,10 +32,9 @@ Or in HPC environments with Slurm and Singularity:
 ```
 $ java -Dconfig.file=configs/SlurmAndSingularity.conf -jar /path/to/cromwell.jar run wdl/MIGNON.wdl /path/to/input.json
 ```
-
 ## List of containers
 
-The following containers are used during the execution of the workflow:
+The following list of docker containers are used during the execution of the workflow:
 
 | Tool     | Version  | Docker container                                                                                                                                                                                        |
 |----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

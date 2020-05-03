@@ -52,7 +52,7 @@ timeP <- ggplot(data = tidyRes, mapping = aes(x = cpu, y = time, fill = cpu)) +
   xlab("Number of CPUs") +
   ylab("Time (minutes)") +
   geom_hline(yintercept = c(30,60,120,240), lty = 2) +
-  theme(legend.position = "none")
+  theme(legend.position = "none", strip.background = element_rect(fill = "white"))
 
 # memory plot
 memoryP <- ggplot(data = tidyRes, mapping = aes(x = cpu, y = maxmemory, fill = cpu)) + 
@@ -62,10 +62,10 @@ memoryP <- ggplot(data = tidyRes, mapping = aes(x = cpu, y = maxmemory, fill = c
   xlab("Number of CPUs") +
   ylab("Max. Memory (Gb)") +
   geom_hline(yintercept = c(4,8,16,32), lty = 2) +
-  theme(legend.position = "none")
+  theme(legend.position = "none", strip.background = element_rect(fill = "white"))
 
 # memory plot
-png(filename = "../figures/Supplementary_1.png", width = 9, height = 5, units = "in", res = 300)
+png(filename = "Figure_2.png", width = 9, height = 5, units = "in", res = 300)
 plot_grid(memoryP, timeP, labels = c("A","B"))
 dev.off()
 
@@ -119,7 +119,7 @@ memoryP <- ggplot(data = tidyRes, mapping = aes(x = task, y = maxmemory, fill = 
 
 
 # memory plot
-png(filename = "../figures/Supplementary_2.png", width = 9, height = 5, units = "in", res = 300)
+png(filename = "Figure_3.tsv", width = 9, height = 5, units = "in", res = 300)
 plot_grid(memoryP, timeP, labels = c("A","B"))
 dev.off()
 

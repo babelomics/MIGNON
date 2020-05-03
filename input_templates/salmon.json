@@ -1,6 +1,7 @@
 {
   "MIGNON.execution_mode": "salmon",
-  "MIGNON.is_paired_end": true,,
+  "MIGNON.is_paired_end": true,
+  "MIGNON.do_vc": false,
   "MIGNON.input_fastq_r1": ["/path/to/R1_1.fastq.gz", "/path/to/R2_1.fastq.gz", "/path/to/R3_1.fastq.gz", "/path/to/R4_1.fastq.gz"],
   "MIGNON.input_fastq_r2": ["/path/to/R1_2.fastq.gz", "/path/to/R2_2.fastq.gz", "/path/to/R3_2.fastq.gz", "/path/to/R4_2.fastq.gz"],
   "MIGNON.sample_id": ["Sample_A", "Sample_B", "Sample_C", "Sample_D"],
@@ -10,6 +11,8 @@
   "MIGNON.edger_script": "/path/to/MIGNON/scripts/edgeR.r",
   "MIGNON.tximport_script": "/path/to/MIGNON/scripts/tximport.r",
   "MIGNON.hipathia_script": "/path/to/MIGNON/scripts/hipathia.r",
-  "MIGNON.ensemblTx_script": "/path/to/MIGNON/scripts/ensembldb.r"
+  "MIGNON.ensemblTx_script": "/path/to/MIGNON/scripts/ensembldb.r",
+  "MIGNON.known_vcfs":[],
+  "MIGNON.known_vcfs_indices": []
 }
 

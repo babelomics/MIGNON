@@ -12,4 +12,9 @@ language: java
 jdk: openjdk8
 
 ## travis build will check wether the WDL code behaves correctly regarding the inputs/outputs of the different inputs of the workflow.
-script: java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl
+script: java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl ;
+        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/hisat2.json ;
+        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/salmon-hisat2.json ;
+        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/star.json ;
+        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/salmon-star.json ;
+        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/salmon.json 

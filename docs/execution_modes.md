@@ -1,14 +1,14 @@
 ---
 layout: default
 title: Execution modes
-nav_order: 3
+nav_order: 4
 ---
 
 # Execution modes
 
 Regarding the execution of the workflow, as explained in the **tool manuscript**, we have designed 5 execution modes that make use of different tools in crucial steps of the workflow: 
 
-| Execution mode  | Alignment | Quantification | Allows Variant Calling | Computational Profile                        |
+| Execution mode  | Alignment | Quantification | Allows variant calling | Computational profile                        |
 |-----------------|-----------|----------------|------------------------|----------------------------------------------|
 | "salmon-hisat2" | HISAT2    | Salmon         | Yes                    | Low memory consumption. Slower than STAR.    |
 | "salmon-star"   | STAR      | Salmon         | Yes                    | High memory consumption. Faster than HISAT2. |
