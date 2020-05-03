@@ -69,7 +69,7 @@ for i in $(seq 0 $l); do
         echo "Downloading $f ..."
         echo "From URL $u..."
         echo "========================"
-        curl -L --retry 10 --ftp-method nocwd -o $f $u
+        curl -L --retry 15 --ftp-method nocwd -o $f $u
     else
         echo "$f found in this directory, skipping to the next file..."
     fi
