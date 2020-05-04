@@ -2,9 +2,7 @@ dist: trusty
 os: linux
 
 before_install:
-    - if [ ! -f "$HOME/misc_cache/womtool_47.jar" ]; then \
-        curl -L --retry 15 -o "$HOME/misc_cache/womtool_47.jar" "https://github.com/broadinstitute/cromwell/releases/download/47/womtool-47.jar"; \
-        fi
+    - if [ ! -f "$HOME/misc_cache/womtool_47.jar" ]; then curl -L --retry 15 -o "$HOME/misc_cache/womtool_47.jar" "https://github.com/broadinstitute/cromwell/releases/download/47/womtool-47.jar"; fi
 
 cache:
     directories:
