@@ -1,6 +1,6 @@
 # MIGNON  <img src="docs/pics/icon.png" align="right" height="200" />
 
-[![Build Status](https://travis-ci.com/martingarridorc/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
+[![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
 _**M**echanistic **I**nte**G**rative a**N**alysis **O**f r**N**a-seq data_
 
