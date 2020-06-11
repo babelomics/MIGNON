@@ -1,3 +1,29 @@
+#!/bin/bash
+
+cat << EOF
+
+This script will:
+
+1. Download and decompress all the neccesary reference material and the cromwell jar file from the different sources using curl.
+2. Download and tag raw reads from the PRJEB35799 project.
+3. Index the reference genome fasta for the alignment with the HISAT2 container.
+4. Index the reference genome for the variant calling with the samtools container.
+5. Index the reference coding DNA for the quantification with the salmon container.
+6. Prepare the MIGNON input JSON.
+7. Launch MIGNON using the "salmon-hisat2" execution mode.
+
+¡¡¡WARNING!!! As this script is intended to perform an example run of MIGNON, the parallelization 
+parameteres are set to: 1 parallel job on the variant calling process and 6 CPUs on QC, pre-processing, alignment and counting.
+This configuration makes execution to take longer than it would with a more powerful configuration, but it is 
+flexible and executable on most modern computers. For more information about how to improve MIGNON performance using
+parallel executions, please refer to:
+
+https://babelomics.github.io/MIGNON/parallelization.html
+
+Thank you for trying MIGNON!
+
+EOF
+
 # exit when any command fails
 set -e
 
