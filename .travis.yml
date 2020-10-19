@@ -3,6 +3,8 @@ os: linux
 
 before_install:
     - if [ ! -f "$HOME/misc_cache/womtool_47.jar" ]; then curl -L --retry 15 -o "$HOME/misc_cache/womtool_47.jar" "https://github.com/broadinstitute/cromwell/releases/download/47/womtool-47.jar"; fi
+    - if [ ! -f "$HOME/misc_cache/ERR3761156.fastq.gz" ]; then curl -L --retry 15 -o "$HOME/misc_cache/ERR3761156.fastq.gz" "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/006/ERR3761156/ERR3761156.fastq.gz";  fi
+    
 
 cache:
     directories:
