@@ -1,7 +1,7 @@
 {
   "MIGNON.execution_mode": "hisat2",
   "MIGNON.is_paired_end": true,
-  "MIGNON.do_vc": "true",
+  "MIGNON.do_vc": true,
   "MIGNON.input_fastq_r1": ["/path/to/R1_1.fastq.gz", "/path/to/R2_1.fastq.gz", "/path/to/R3_1.fastq.gz", "/path/to/R4_1.fastq.gz"],
   "MIGNON.input_fastq_r2": ["/path/to/R1_2.fastq.gz", "/path/to/R2_2.fastq.gz", "/path/to/R3_2.fastq.gz", "/path/to/R4_2.fastq.gz"],
   "MIGNON.sample_id": ["Sample_A", "Sample_B", "Sample_C", "Sample_D"],
