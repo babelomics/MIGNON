@@ -1,11 +1,16 @@
 dist: trusty
 os: linux
 
-before_install:
-    - if [ ! -f "$HOME/misc_cache/womtool_47.jar" ]; then curl -L --retry 15 -o "$HOME/misc_cache/womtool_47.jar" "https://github.com/broadinstitute/cromwell/releases/download/47/womtool-47.jar"; fi
-    - if [ ! -f "$HOME/misc_cache/ERR3761156.fastq.gz" ]; then curl -L --retry 15 -o "$HOME/misc_cache/ERR3761156.fastq.gz" "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR376/006/ERR3761156/ERR3761156.fastq.gz";  fi
-    
+sudo: required
 
+services:
+  - docker
+
+before_install:
+    if [ -f "$HOME/misc_cache/womtool_47.jar" ]; then rm $HOME/misc_cache/womtool_47.jar; fi
+    - if [ ! -d "$HOME/misc_cache/mignon_test_data" ]; then fileid="1iH2UUF-awGPKYgixP9_5mApMpqGFDiBU"; filename="$HOME/misc_cache/mignon_test_data.tar.gz"; curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}" > /dev/null; curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}; mkdir -p ${filename/.tar.gz/}; tar -xzvf ${filename} --directory ${filename/.tar.gz/}; fi
+    
+        
 cache:
     directories:
       - $HOME/misc_cache
@@ -14,9 +19,7 @@ language: java
 jdk: openjdk8
 
 ## travis build will check wether the WDL code behaves correctly regarding the inputs/outputs of the different inputs of the workflow.
-script: java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl ;
-        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/hisat2.json ;
-        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/salmon-hisat2.json ;
-        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/star.json ;
-        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/salmon-star.json ;
-        java -jar $HOME/misc_cache/womtool_47.jar validate wdl/MIGNON.wdl -i input_templates/salmon.json 
+script: sed -i "s#flagForTestDir#${HOME}/misc_cache/mignon_test_data#g" tests/test_input.json;
+        sed -i "s#flagForPwd#${PWD}/misc_cache/mignon_test_data#g" tests/test_input.json;
+        java -jar $HOME/misc_cache/mignon_test_data/womtool-47.jar validate wdl/MIGNON.wdl -i tests/test_input.json;
+        java -Dconfig.file=configs/LocalWithDocker.conf -jar $HOME/misc_cache/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i tests/test_input.json
