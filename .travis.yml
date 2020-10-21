@@ -14,4 +14,6 @@ jdk: openjdk8
 
 script: bash runMignonExample.sh
 
-after_script: find . -type f -name stderr -exec cat {} \;
+after_script: 
+  - find . -type f -name stderr -exec cat {} \;
+  - find . -type f -name stdout -exec cat {} \;
