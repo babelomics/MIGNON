@@ -3,6 +3,9 @@ os: linux
 
 sudo: required
 
+before_install:
+  - rm -rf $PWD/mignon_test_data
+
 services:
   - docker
         
