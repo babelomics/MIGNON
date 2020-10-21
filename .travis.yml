@@ -16,5 +16,4 @@ cache:
 language: java
 jdk: openjdk8
 
-## travis build will check wether the WDL code behaves correctly regarding the inputs/outputs of the different inputs of the workflow.
-script: bash runMignonExample.sh
+script: rm -rf $PWD/mignon_test_data
