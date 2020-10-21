@@ -9,7 +9,8 @@ services:
 before_install:
     
     - if [ ! -d "$HOME/misc_cache/mignon_test_data" ]; then fileid="1iH2UUF-awGPKYgixP9_5mApMpqGFDiBU"; filename="$HOME/misc_cache/mignon_test_data.tar.gz"; curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}" > /dev/null; curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}; mkdir -p ${filename/.tar.gz/}; tar -xzvf ${filename} --directory ${filename/.tar.gz/}; fi
-    
+    - sed -i "s#flagForTestDir#${HOME}/misc_cache/mignon_test_data/mignon_test_data#g" tests/test_input.json
+    - sed -i "s#flagForPwd#${PWD}#g" tests/test_input.json
         
 cache:
     directories:
@@ -19,7 +20,5 @@ language: java
 jdk: openjdk8
 
 ## travis build will check wether the WDL code behaves correctly regarding the inputs/outputs of the different inputs of the workflow.
-script: sed -i 's#flagForTestDir#${HOME}/misc_cache/mignon_test_data/mignon_test_data#g' tests/test_input.json;
-        sed -i 's#flagForPwd#${PWD}#g' tests/test_input.json;
-        java -jar $HOME/misc_cache/mignon_test_data/mignon_test_data/womtool-47.jar validate wdl/MIGNON.wdl -i tests/test_input.json;
+script: java -jar $HOME/misc_cache/mignon_test_data/mignon_test_data/womtool-47.jar validate wdl/MIGNON.wdl -i tests/test_input.json;
         java -Dconfig.file=configs/LocalWithDocker.conf -jar $HOME/misc_cache/mignon_test_data/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i tests/test_input.json
