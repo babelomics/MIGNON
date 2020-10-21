@@ -3,6 +3,7 @@
 # prepare test data
 echo "MIGNON: Preparing test data..."
 curlImage="tutum/curl:trusty"
+docker pull ${curlImage}
 docker run -v ${PWD}:${PWD} -w ${PWD} ${curlImage} bash prepareTestData.sh
 
 # validate input
