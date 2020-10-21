@@ -36,21 +36,21 @@ workflow MIGNON {
     Array[File?] known_vcfs_indices 
 
     # execution inputs
-    Int? fastp_cpu = 6
+    Int? fastp_cpu = 1
     String? fastp_mem = "16G"
-    Int? fastqc_cpu = 6
+    Int? fastqc_cpu = 1
     String? fastqc_mem = "16G"
-    Int? hisat2_cpu = 6
+    Int? hisat2_cpu = 1
     String? hisat2_mem = "16G"
-    Int? sam2bam_cpu = 6
+    Int? sam2bam_cpu = 1
     String? sam2bam_mem = "16G"
-    Int? star_cpu = 6
+    Int? star_cpu = 1
     String? star_mem = "32G"
-    Int? salmon_cpu = 6
+    Int? salmon_cpu = 1
     String?  salmon_mem = "16G"
-    Int? featureCounts_cpu = 6
+    Int? featureCounts_cpu = 1
     String? featureCounts_mem = "16G"
-    Int? vep_cpu = 6
+    Int? vep_cpu = 1
     String? vep_mem = "16G"
     Int? haplotype_scatter_count = 1
 
