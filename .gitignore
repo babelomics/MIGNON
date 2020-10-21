@@ -1,2 +1,6 @@
-MIGNON_example/*
+cromwell-executions/*
+cromwell-workflow-logs/*
 docs/_site
+mignon_test_data*
+cookie
+current_test_input.json

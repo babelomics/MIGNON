@@ -14,4 +14,4 @@ language: java
 jdk: openjdk8
 
 ## travis build will check wether the WDL code behaves correctly regarding the inputs/outputs of the different inputs of the workflow.
-script: bash $PWD/runMignonExample.sh
+script: bash runMignonExample.sh
