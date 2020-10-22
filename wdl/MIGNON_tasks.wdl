@@ -9,10 +9,6 @@ task fastp {
     String output_json
     String output_html
 
-    Int mean_quality
-    Int required_length
-    Int window_size
-
     Int? cpu 
     String? mem 
 
@@ -24,11 +20,7 @@ task fastp {
           ${"-O " + output_fastq_r2} \
           -j ${output_json} \
           -h ${output_html} \
-          --thread ${cpu} \
-          --cut_right \
-          --cut_right_window_size ${window_size} \
-          --cut_right_mean_quality ${mean_quality} \
-          --length_required ${required_length} 
+          --thread ${cpu}
 
     }
 

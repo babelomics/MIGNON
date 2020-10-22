@@ -55,9 +55,6 @@ workflow MIGNON {
     Int? haplotype_scatter_count = 1
 
     # other inputs 
-    Int fastp_windows_size = 4
-    Int fastp_mean_quality = 15
-    Int fastp_required_length = 20
     String? salmon_library_type = "A"
     File? tx2gene_file    
     Int? edger_min_counts = 15  
@@ -113,9 +110,6 @@ workflow MIGNON {
                 output_fastq_r2 = output_fastp_r2,
                 output_json = sample + "_fastp.json",
                 output_html = sample + "_fastp.html",
-                window_size = fastp_windows_size,
-                mean_quality = fastp_mean_quality,
-                required_length = fastp_required_length,
                 cpu = fastp_cpu,
                 mem = fastp_mem
 

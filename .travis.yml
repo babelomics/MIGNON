@@ -3,9 +3,6 @@ os: linux
 
 sudo: required
 
-before_install:
-  - rm -rf $PWD/mignon_test_data
-
 services:
   - docker
         
@@ -13,3 +10,7 @@ language: java
 jdk: openjdk8
 
 script: bash runMignonExample.sh
+
+after_failure: 
+  - cat cromwell-executions/MIGNON/*/call-*/shard-*/execution/stderr
+  - cat cromwell-executions/MIGNON/*/call-*/shard-*/execution/stdout
