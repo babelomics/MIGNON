@@ -52,6 +52,8 @@ workflow MIGNON {
     String? featureCounts_mem = "16G"
     Int? vep_cpu = 1
     String? vep_mem = "16G"
+
+    # number of parallel threads during variant calling
     Int? haplotype_scatter_count = 1
 
     # other inputs 
@@ -79,9 +81,18 @@ workflow MIGNON {
     File? intervals
     File? input_bai
 
-    ############################
-    # TASK CALLER
-    ############################
+    # additional execution parameters
+    String? fastp_additional_parameters = ""
+    String? fastqc_additional_parameters = ""
+    String? hisat2_additional_parameters = ""
+    String? sam2bam_additional_parameters = ""
+    String? star_additional_parameters = ""
+    String? salmon_additional_parameters = ""
+    String? featureCounts_additional_parameters = ""
+
+    ###############
+    # TASK CALLER #
+    ###############
 
     Int len_fastq = length(input_fastq_r1)
 
@@ -111,7 +122,8 @@ workflow MIGNON {
                 output_json = sample + "_fastp.json",
                 output_html = sample + "_fastp.html",
                 cpu = fastp_cpu,
-                mem = fastp_mem
+                mem = fastp_mem,
+                additional_parameters = fastp_additional_parameters
 
         }
 
@@ -124,7 +136,8 @@ workflow MIGNON {
                 out_report_r1 = sample + "_1_fastqc.html",
                 out_report_r2 = output_fastqc_r2,
                 cpu = fastqc_cpu,
-                mem = fastqc_mem
+                mem = fastqc_mem,
+                additional_parameters = fastqc_additional_parameters
 
         }
 
@@ -145,7 +158,8 @@ workflow MIGNON {
                     center = rg_center,
                     platform = rg_platform,
                     cpu = hisat2_cpu,
-                    mem = hisat2_mem
+                    mem = hisat2_mem,
+                    additional_parameters = hisat2_additional_parameters
 
             }
 
@@ -156,7 +170,8 @@ workflow MIGNON {
                     input_sam = hisat2.sam,
                     output_bam = sample + ".bam",
                     cpu = sam2bam_cpu,
-                    mem = sam2bam_mem
+                    mem = sam2bam_mem,
+                    additional_parameters = sam2bam_additional_parameters
 
             }
 
@@ -176,7 +191,8 @@ workflow MIGNON {
                     index_path = star_index_path,
                     output_prefix = sample,
                     cpu = star_cpu,
-                    mem = star_mem
+                    mem = star_mem,
+                    additional_parameters = star_additional_parameters
 
             }
 
@@ -197,7 +213,8 @@ workflow MIGNON {
                     index_path = salmon_index_path,
                     output_dir = sample,
                     cpu = salmon_cpu,
-                    mem = salmon_mem
+                    mem = salmon_mem,
+                    additional_parameters = salmon_additional_parameters
 
             }  
 
@@ -258,7 +275,8 @@ workflow MIGNON {
                 gtf = gtf_file,
                 output_counts = "counts.tsv",
                 cpu = featureCounts_cpu,
-                mem = featureCounts_mem
+                mem = featureCounts_mem,
+                additional_parameters = featureCounts_additional_parameters
 
         }
 
