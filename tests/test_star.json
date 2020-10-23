@@ -18,7 +18,7 @@
     "MIGNON.group": ["Control", "Control", "Problem", "Problem"],
     "MIGNON.known_vcfs":["flagForPwd/mignon_test_data/subset_variants.vcf.gz"],
     "MIGNON.known_vcfs_indices": ["flagForPwd/mignon_test_data/subset_variants.vcf.gz.tbi"],
-    "MIGNON.gtf_file": "flagForPwd/mignon_test_data/subset_annotation.gtf",
+    "MIGNON.gtf_file": "flagForPwd/mignon_test_data/Homo_sapiens.GRCh38.99.chr.gtf",
     "MIGNON.star_index_path": "flagForPwd/mignon_test_data/star_index",
     "MIGNON.edger_script": "flagForPwd/scripts/edgeR.r",
     "MIGNON.hipathia_script": "flagForPwd/scripts/hipathia.r"

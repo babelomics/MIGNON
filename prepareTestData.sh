@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ ! -d "$PWD/mignon_test_data" ]; then
-    fileid="1Qizo1plkVWOtJ-xPnYiNhMQ2z7uMaGvJ";
+    fileid="1FuQre-nOuZHlQ_N-U5XE26WLj-ou0lXz";
     filename="$PWD/mignon_test_data.tar.gz";
     curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}" > /dev/null
     curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}
