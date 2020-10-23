@@ -16,4 +16,4 @@ java -jar ${PWD}/mignon_test_data/womtool-47.jar validate wdl/MIGNON.wdl -i test
 echo "MIGNON: Performing dry run of the workflow..."
 java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_hisat2_vc.json
 java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_star.json
-#java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_salmon.json
+java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_salmon.json
