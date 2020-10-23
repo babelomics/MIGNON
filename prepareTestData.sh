@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ ! -d "$PWD/mignon_test_data" ]; then
-    fileid="1iH2UUF-awGPKYgixP9_5mApMpqGFDiBU";
+    fileid="1Qizo1plkVWOtJ-xPnYiNhMQ2z7uMaGvJ";
     filename="$PWD/mignon_test_data.tar.gz";
     curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=${fileid}" > /dev/null
     curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=${fileid}" -o ${filename}
@@ -12,5 +12,6 @@ else
 fi
 
 # prepare test json
-sed "s#flagForPwd#${PWD}#g" tests/test_input.json > current_test_input.json
-chmod 777 current_test_input.json
+sed "s#flagForPwd#${PWD}#g" tests/test_hisat2_vc.json > test_hisat2_vc.json
+sed "s#flagForPwd#${PWD}#g" tests/test_star.json > test_star.json
+sed "s#flagForPwd#${PWD}#g" tests/test_salmon.json > test_salmon.json

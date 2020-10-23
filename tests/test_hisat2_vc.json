@@ -1,0 +1,33 @@
+{
+    "MIGNON.execution_mode": "hisat2",
+    "MIGNON.is_paired_end": true,
+    "MIGNON.do_vc": true,
+	"MIGNON.input_fastq_r1": [
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615222_1.fastq.gz",
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615223_1.fastq.gz",
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615224_1.fastq.gz",
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615225_1.fastq.gz"
+	],
+    "MIGNON.input_fastq_r2": [
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615222_2.fastq.gz",
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615223_2.fastq.gz",
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615224_2.fastq.gz",
+		"flagForPwd/mignon_test_data/subset_fastq/SRR8615225_2.fastq.gz"
+	],
+    "MIGNON.sample_id": ["Control_1", "Control_2", "Problem_1", "Problem_2"],
+    "MIGNON.group": ["Control", "Control", "Problem", "Problem"],
+    "MIGNON.gtf_file": "flagForPwd/mignon_test_data/subset_annotation.gtf",
+    "MIGNON.hisat2_index_path": "flagForPwd/mignon_test_data/hisat_index",
+    "MIGNON.hisat2_index_prefix": "genome",
+    "MIGNON.vep_cache_dir": "flagForPwd/mignon_test_data/subset_vep_cache",
+    "MIGNON.ref_fasta": "flagForPwd/mignon_test_data/subset_genome.fa",
+    "MIGNON.ref_fasta_index": "flagForPwd/mignon_test_data/subset_genome.fa.fai",
+    "MIGNON.ref_dict": "flagForPwd/mignon_test_data/subset_genome.dict",
+    "MIGNON.db_snp_vcf": "flagForPwd/mignon_test_data/subset_variants.vcf.gz",
+    "MIGNON.db_snp_vcf_index": "flagForPwd/mignon_test_data/subset_variants.vcf.gz.tbi",
+    "MIGNON.known_vcfs":["flagForPwd/mignon_test_data/subset_variants.vcf.gz"],
+    "MIGNON.known_vcfs_indices": ["flagForPwd/mignon_test_data/subset_variants.vcf.gz.tbi"],
+    "MIGNON.edger_script": "flagForPwd/scripts/edgeR.r",
+    "MIGNON.hipathia_script": "flagForPwd/scripts/hipathia.r"
+
+}
