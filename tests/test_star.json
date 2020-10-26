@@ -21,6 +21,7 @@
     "MIGNON.gtf_file": "flagForPwd/mignon_test_data/Homo_sapiens.GRCh38.99.chr.gtf",
     "MIGNON.star_index_path": "flagForPwd/mignon_test_data/star_index",
     "MIGNON.edger_script": "flagForPwd/scripts/edgeR.r",
-    "MIGNON.hipathia_script": "flagForPwd/scripts/hipathia.r"
+    "MIGNON.hipathia_script": "flagForPwd/scripts/hipathia.r",
+    "MIGNON.star_additional_parameters": "--limitBAMsortRAM 34359738368"
 
 }
