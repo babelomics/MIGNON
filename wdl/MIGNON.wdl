@@ -14,6 +14,7 @@ workflow MIGNON {
     Array[String] group
     Boolean is_paired_end
     Boolean use_gz = true
+    Boolean filter_unmapped = true
     String execution_mode
     Boolean do_vc
     File gtf_file
@@ -52,6 +53,8 @@ workflow MIGNON {
     String? featureCounts_mem = "16G"
     Int? vep_cpu = 1
     String? vep_mem = "16G"
+    Int? filterBam_cpu = 1
+    String? filterBam_mem = "16G"
 
     # number of parallel threads during variant calling
     Int? haplotype_scatter_count = 1
@@ -89,6 +92,7 @@ workflow MIGNON {
     String? star_additional_parameters = ""
     String? salmon_additional_parameters = ""
     String? featureCounts_additional_parameters = ""
+    String? filterBam_additional_parameters = ""
 
     ###############
     # TASK CALLER #
@@ -222,11 +226,27 @@ workflow MIGNON {
 
         if (do_vc) {
 
+            if (filter_unmapped) {
+
+                # filter bams
+                call Mignon.filterBam as filterBam {
+
+                    input:
+                        input_bam = select_first([bamHisat2.bam, star.bam]),
+                        output_bam = sample + "_filtered.bam",
+                        cpu = filterBam_cpu,
+                        mem = filterBam_mem,
+                        additional_parameters = filterBam_additional_parameters
+
+                }
+
+            }
+            
             # gatk variant calling
             call MignonVariantCalling.VariantCalling as VariantCalling {
 
                 input:
-                    input_bam = select_first([bamHisat2.bam, star.bam]),
+                    input_bam = select_first([filterBam.bam, bamHisat2.bam, star.bam]),
                     sampleName = sample,
                     alignment_method = select_first([hisat2Aligner, starAligner]),
                     rg_center = rg_center,

@@ -471,6 +471,39 @@ task hipathia {
 
 }
 
+# FILTERUNMAPED
+task filterBam {
+  
+    File input_bam
+    String output_bam
+
+    Int? cpu 
+    String? mem 
+
+    String? additional_parameters
+
+    command {
+
+      samtools view ${additional_parameters} -F 4 --threads ${cpu} -O BAM -o ${output_bam} ${input_bam}
+
+    }
+
+    runtime {
+
+      docker: "quay.io/biocontainers/samtools:1.9--h8571acd_11"    
+      cpu: cpu
+      requested_memory: mem
+
+    }
+
+    output {
+
+      File bam = output_bam
+
+    }
+
+}
+
 # VEP
 task vep {
 
