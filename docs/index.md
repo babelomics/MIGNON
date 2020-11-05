@@ -2,12 +2,12 @@
 
 Welcome to MIGNON's documentation!
 
-1. [Installation](installation.md)
-2. [Run MIGNON example](run_example.md)
-3. [Input](input.md)
-4. [Execution modes](execution_modes.md)
-5. [Output](output.md)
-6. [Parallelization](parallelization.md)
+1. [Installation](1_installation.md)
+2. [Run MIGNON example](2_run_example.md)
+3. [Input](3_input.md)
+4. [Execution modes](4_execution_modes.md)
+5. [Output](5_output.md)
+6. [Parallelization](6_parallelization.md)
 
 # About
 

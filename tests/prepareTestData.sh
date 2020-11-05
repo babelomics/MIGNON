@@ -12,6 +12,6 @@ else
 fi
 
 # prepare test json
-sed "s#flagForPwd#${PWD}#g" tests/test_hisat2_vc.json > test_hisat2_vc.json
-sed "s#flagForPwd#${PWD}#g" tests/test_star.json > test_star.json
-sed "s#flagForPwd#${PWD}#g" tests/test_salmon.json > test_salmon.json
+sed "s#flagForPwd#${PWD}#g" examples/test_hisat2_vc.json > test_hisat2_vc.json
+sed "s#flagForPwd#${PWD}#g" examples/test_star.json > test_star.json
+sed "s#flagForPwd#${PWD}#g" examples/test_salmon.json > test_salmon.json

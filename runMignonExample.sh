@@ -4,7 +4,7 @@
 echo "MIGNON: Preparing test data..."
 curlImage="tutum/curl:trusty"
 docker pull ${curlImage}
-docker run -v ${PWD}:${PWD} -w ${PWD} ${curlImage} bash prepareTestData.sh
+docker run -v ${PWD}:${PWD} -w ${PWD} ${curlImage} bash tests/prepareTestData.sh
 
 # validate input
 echo "MIGNON: Validating input JSON..."
