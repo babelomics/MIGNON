@@ -1,5 +1,6 @@
 import "MIGNON_htseq_tasks.wdl" as Mignon
 import "MIGNON_calling.wdl" as MignonVariantCalling
+import "MIGNON_htseq_tasks.wdl" as MignonHtSeq
 
 workflow MIGNON {
 
@@ -210,6 +211,7 @@ workflow MIGNON {
                 input:
                     input_alignment = select_first([star.bam, bamHisat2.bam]),
                     gtf = gtf_file,
+                    sample_id = sample,
                     output_counts = sample + "_counts.tsv",
                     cpu = 1,
                     mem = "16G",

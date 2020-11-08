@@ -357,17 +357,24 @@ task tximport {
     String output_counts
     String quant_tool
     Array[String] sample_ids
-    File tximport_script
 
     Int? cpu 
     String? mem 
     
     command {
 
-      Rscript ${tximport_script} --tx2gene ${tx2gene} \
-      --quantFiles ${sep=',' quant_files} \
-      --sampleIds ${sep=',' sample_ids} \
-      --outFile ${output_counts} 
+      Rscript -e "
+        txGene <- '${tx2gene}';
+        quantFiles <- '${sep=',' quant_files}';
+        sampleIds <- '${sep=',' sample_ids}';
+        outFile <- '${output_counts}';
+        tx2gene <- read.csv(txGene);
+        quantFiles <- strsplit(quantFiles, ',')[[1]];
+        sampleIds <- strsplit(sampleIds, ',')[[1]];
+        txi <- tximport(files = quantFiles, tx2gene = tx2gene, type = 'salmon', ignoreTxVersion = TRUE, dropInfReps=TRUE, countsFromAbundance = 'lengthScaledTPM');
+        counts <- txi[['counts']];
+        colnames(counts) <- sampleIds;
+        write.table(counts, file = outFile, sep = '\t', row.names = TRUE, col.names = NA, quote = FALSE)"
     
     }
 
@@ -394,20 +401,57 @@ task edgeR {
     Array[String] samples
     Array[String] group
     Int? min_counts
-    
-    File edger_script
 
     Int? cpu 
     String? mem 
 
-    command {
+    command <<<
 
-      Rscript ${edger_script} --counts ${counts} \
-      --samples ${sep=',' samples} \
-      --group ${sep=',' group} \
-      --minCounts ${min_counts} 
-    
-    }
+      Rscript -e "
+        library(edgeR);
+        countsFile <- '${counts}';
+        samples <- '${sep=',' samples}';
+        group <- '${sep=',' group}';
+        minCounts <- ${min_counts};
+        counts <- read.table(file = countsFile, header = TRUE, sep = '\t', stringsAsFactors = FALSE, quote = '', row.names = 1);
+        idToDf <- strsplit(samples, ',')[[1]];
+        groupToDf <- strsplit(group, ',')[[1]];
+        sampleInfo <- data.frame(id = idToDf, group = groupToDf);
+        message('Normalizing expression for hipathia...');
+        countsHi <- counts[ , sampleInfo[,'id'] ];
+        dgeListHi <- DGEList(counts = as.matrix(countsHi), group = sampleInfo[,'group']);
+        dgeListHi <- calcNormFactors(object = dgeListHi, method = 'TMM');
+        logCpmHi <- cpm(dgeListHi, log = TRUE, prior.count = 3);
+        message('Normalizing expression for DE...');
+        counts <- counts[ , sampleInfo[,'id'] ];
+        counts <- counts[ rowSums(counts) >= minCounts , ];
+        dgeList <- DGEList(counts = as.matrix(counts), group = sampleInfo[,'group']);
+        dgeList <- calcNormFactors(object = dgeList, method = 'TMM');
+        logCpm <- cpm(dgeList, log = TRUE, prior.count = 3);
+        logCpm <- data.frame(geneId = rownames(logCpm), logCpm);       
+        message('Creating design and pairwise comparisons...');       
+        design <- model.matrix( ~ 0 + group, data = sampleInfo);      
+        combinations <- combn(colnames(design), 2);
+        contrasts <- paste0(combinations[2,], '-', combinations[1,]);
+        cMatrix <- makeContrasts(contrasts = contrasts, levels = colnames(design));       
+        message('Performing DE analysis...');   
+        dgeList <- estimateDisp(dgeList, design);       
+        fit <- glmFit(dgeList, design);       
+        deList <- apply(cMatrix, 2, function(x) {;
+          test <- glmLRT(fit, contrast = x);
+          table <- topTags(test, n = Inf)[['table']];
+          table <- data.frame(geneId = rownames(table), table);
+          return(table);
+        });       
+        df <- Reduce(rbind, deList);
+        df[, 'comparison'] <- rep(names(deList), unlist(lapply(deList, nrow)));      
+        message('Writting output...');      
+        saveRDS(object = logCpmHi, file = 'logCPMs_hipathia.rds');      
+        write.table(x = logCpm, file = 'logCPMs.tsv', sep = '\t', row.names = FALSE, quote = FALSE);    
+        write.table(x = df, file = 'differential_expression.tsv', sep = '\t', row.names = FALSE, quote = FALSE);
+        message('Done!')"
+      
+    >>>
 
     runtime {
 
@@ -440,23 +484,80 @@ task hipathia {
 
     Array[File?] input_vcfs
     Float? ko_factor
-    
-    File hipathia_script
 
     Int? cpu 
     String? mem 
 
-    command {
+    command <<<
       
-      Rscript ${hipathia_script} --cpmFile ${cpm_file} \
-      --samples ${sep=',' samples} \
-      --group ${sep=',' group} \
-      --normalizeByLength ${normalize_by_length} \
-      --doVc ${do_vc} \
-      --filteredVariants ${sep = "," input_vcfs} \
-      --koFactor ${ko_factor}
+      Rscript -e "
+        library(hipathia);
+        cpmFile <- '${cpm_file}';
+        samples <- '${sep=',' samples}';
+        group <- '${sep=',' group}';
+        doVc <- as.logical('${do_vc}');
+        normalizeByLength <- as.logical('${normalize_by_length}');
+        if(doVc) {;
+          inputFilteredVcfs <- '${sep=',' input_vcfs}';
+          koFactor <- as.numeric('${ko_factor}');
+        };
+        logCpms <- readRDS(cpmFile);
+        idToDf <- strsplit(samples, ',')[[1]];
+        groupToDf <- factor(strsplit(group, ',')[[1]]);
+        sampleInfo <- data.frame(id = idToDf, group = groupToDf);
+        logCpms <- as.matrix(logCpms);
+        logCpms <- logCpms[ , sampleInfo[, 'id' ] ];
+        message('Loading pathways...');
+        pathways <- load_pathways(species = 'hsa');
+        message('Pre-processing expression matrix...');
+        normMatrix <- normalize_data(logCpms);
+        if(doVc) {;
+          message('Performing in-silico knockout...');
+          inputFilteredVcfs <- strsplit(inputFilteredVcfs, ',')[[1]];
+          genesBySample <- lapply(inputFilteredVcfs, function(x) {;
+            vcf <- try(read.table(file = x, header = FALSE, sep = '\t', stringsAsFactors = FALSE, ));
+            if(inherits(vcf, 'try-error')) {;
+              return(NA);
+            } else {;
+              genes <- unique(vcf[,4]);
+              return(genes);
+            };
+          });
+          names(genesBySample) <- gsub(pattern = '.txt', replacement = '',  basename(inputFilteredVcfs));
+          genesBySample <- genesBySample[!is.na(genesBySample)];
+          genesBySample <- lapply(genesBySample, function(x) x[x %in% rownames(normMatrix)]);
+          koMatrix <- matrix(1, nrow = nrow(normMatrix), ncol = ncol(normMatrix));
+          rownames(koMatrix) <- rownames(normMatrix);
+          colnames(koMatrix) <- colnames(normMatrix);
+          for( sample in names(genesBySample) ) {;
+            koMatrix[ genesBySample[[sample]] , sample ] <- koFactor;
+          };
+          normMatrix <- normMatrix * koMatrix;
+        };
+        message('Translating IDs...');
+        normTranslatedMatrix <- translate_data(normMatrix, species = 'hsa');
+        message('Performing hipathia analysis...');
+        hipathiaRes <- hipathia(normTranslatedMatrix, pathways);
+        pathValues <- get_paths_data(hipathiaRes, matrix = TRUE);
+        if( as.logical(normalizeByLength )) pathValues <- normalize_paths(pathValues, pathways);
+        message('Performing comparisons...');
+        combinations <- combn( levels(sampleInfo[,'group']) , 2);
+        dsList <- apply(combinations, 2, function(x) {;
+          compTable <- do_wilcoxon(data = pathValues, group = sampleInfo[,'group'], g1 = x[2], g2 = x[1]);
+          compTable <- data.frame(pathId = rownames(compTable), compTable);
+          return(compTable);
+        });
+        names(dsList) <- paste0(combinations[2,], '-', combinations[1,]);
+        df <- Reduce(rbind, dsList);
+        df[,'comparison'] <- rep(names(dsList), unlist(lapply(dsList, nrow)));
+        message('Writting output...');
+        write.table(x = pathValues, file = 'path_values.tsv', sep = '\t', row.names = TRUE, quote = FALSE);
+        write.table(x = df, file = 'differential_signaling.tsv', sep = '\t', row.names = FALSE, quote = FALSE);
+        write.table(x = normMatrix, file = 'scaled_matrix.tsv', sep = '\t', row.names = TRUE, quote = FALSE);
+        if(doVc) write.table(x = koMatrix, file = 'ko_matrix.tsv', sep = '\t', row.names = TRUE, quote = FALSE);
+        message('Done!')"
     
-    }
+    >>>
 
     runtime {
 
@@ -545,53 +646,6 @@ task vep {
     output {
 
       File output_vcf = output_file
-      
-    }
-
-}
-
-# report
-task report {
-
-    File rmd_file
-    File r_script
-
-    File differential_expression
-    File differential_signaling
-
-    Boolean do_vc
-    File? ko_matrix
-    Float? ko_factor
-
-    String output_file
-
-    Int? cpu 
-    String? mem 
-    
-    command {
-
-      Rscript ${r_script} --rmdFile ${rmd_file} \
-      --outFile ${output_file} \
-      --outDir $PWD \
-      --diffExprFile ${differential_expression} \
-      --diffSignFile ${differential_signaling} \
-      --doVc ${do_vc} \
-      --koMat ${ko_matrix} \
-      --koFactor ${ko_factor}
-    
-    }
-
-    runtime {
-
-      docker: "rocker/verse:3.6.2" 
-      cpu: cpu
-      requested_memory: mem
-
-    }
-
-    output {
-
-      File output_report = output_file
       
     }
 

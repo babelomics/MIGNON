@@ -23,9 +23,6 @@ workflow MIGNON {
     String? hisat2_sample_id
     String? star_index_path
     String? salmon_index_path
-    File? edger_script
-    File? tximport_script
-    File? hipathia_script
     String? vep_cache_dir
     File? ref_fasta
     File? ref_fasta_index
@@ -331,7 +328,6 @@ workflow MIGNON {
                 quant_files = salmon.quant,
                 quant_tool = "salmon",
                 sample_ids = sample_id,
-                tximport_script = tximport_script,
                 cpu = tximport_cpu,
                 mem = tximport_mem            
 
@@ -344,7 +340,6 @@ workflow MIGNON {
         
         input:
             counts = select_first([txImport.counts, featureCounts.counts]),
-            edger_script = edger_script,
             samples = sample_id,
             group = group,
             min_counts = edger_min_counts,
@@ -358,7 +353,6 @@ workflow MIGNON {
         
         input:
             cpm_file = edgeR.logcpms_hipathia,
-            hipathia_script = hipathia_script,
             samples = sample_id,
             group = group,
             normalize_by_length = hipathia_normalize,
