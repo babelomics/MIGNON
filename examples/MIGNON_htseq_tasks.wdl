@@ -268,10 +268,10 @@ task salmon {
 
 }
 
-# FEATURECOUNTS
-task featureCounts {
+# HTSEQ
+task htseq {
   
-    Array[File?] input_alignments
+    File? input_alignment
 
     File gtf
 
@@ -284,17 +284,13 @@ task featureCounts {
 
     command {
 
-      featureCounts ${additional_parameters} \
-                    -T ${cpu} -a ${gtf} -o ${output_counts}.raw ${sep=' ' input_alignments}
-      
-      # format count matrix
-      sed -r 's#[^\t]+/([^\/\t]+)\.[bs]am#\1#g' ${output_counts}.raw | sed -r 's#Aligned\.sortedByCoord\.out##g' | sed '1d' | cut -f 1,7- > ${output_counts}
+      htseq-count -f bam ${input_alignment} ${gtf} ${additional_parameters} > ${output_counts}
 
     }
 
     runtime {
 
-      docker: "quay.io/biocontainers/subread:1.6.4--h84994c4_1"
+      docker: "quay.io/biocontainers/htseq:0.6.1.post1--py27h76bc9d7_5"
       cpu: cpu
       requested_memory: mem
 
@@ -303,33 +299,77 @@ task featureCounts {
     output {
 
       File counts = output_counts
-      File summary = "${output_counts}.raw.summary"
 
     }
 
 }
 
+# HTSEQ
+task mergeCounts {
+  
+    Array[File?] count_files
+
+    String output_counts
+
+    Int? cpu 
+    String? mem 
+
+    command {
+
+      # transform count files into bash Array
+      countFiles=( ${sep=' ' count_files} )
+
+      # extract gene names
+      cut -f 1 $countFiles > gene_names.tsv
+
+      # add column names
+      for i in ${sep=' ' count_files}; do \
+        onlyCountsFile=$(sed "s/_counts.tsv/_only_counts.tsv/g" $i); \
+        processedCountsFile=$(sed "s/_counts.tsv/_processed_counts.tsv/g" $i); \
+        cut -f 2 $i > "$onlyCountsFile"; \
+        cName=$(basename $i | sed "s/Aligned.sortedByCoord.out.bam_counts.tsv//g"); \
+        sed "1s/^/$cName\n/" $onlyCountsFile > "$processedCountsFile"; \
+      done
+
+      # finally paste all files into the output count file
+      processedCountsFiles=$(find . -type f -name *_processed_counts.tsv)
+      paste gene_names.tsv $processedCountsFiles > ${output_counts}
+
+    }
+
+    runtime {
+
+      docker: "ubuntu:xenial-20200916"
+      cpu: cpu
+      requested_memory: mem
+
+    }
+
+    output {
+
+      File counts = output_counts
+
+    }
+
+}
+
+
 # ENSEMBLDB TX2GENE
 task ensemblTx2Gene {
+
+    File ensembldb_script
   
     File gtf   
     String output_tx2gene
 
+    String? job_id
     Int? cpu 
     String? mem 
     
     command {
 
-      Rscript -e "
-        library(ensembldb); \
-        gtfFile <- '${gtf}'; \
-        outFile <- '${output_tx2gene}'; \
-        DB <- ensDbFromGtf(gtf = gtfFile); \
-        eDB <- EnsDb(DB); \
-        txs <- keys(x = eDB, keytype = 'TXID'); \
-        tx2gene <- select(x = eDB, keys = txs, keytype = 'TXID', columns = 'GENEID'); \
-        write.csv(tx2gene, outFile, row.names=FALSE); \
-        file.remove(DB)"
+      Rscript ${ensembldb_script} --gtf ${gtf} \
+      --outFile ${output_tx2gene}
 
     }
 
