@@ -5,6 +5,10 @@ sudo: required
 
 services:
   - docker
+  - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE mignon_dev;'
         
 language: java
 jdk: openjdk8
