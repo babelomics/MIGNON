@@ -318,20 +318,20 @@ task ensemblTx2Gene {
     Int? cpu 
     String? mem 
     
-    command {
+    command <<<
 
       Rscript -e "
-        library(ensembldb); \
-        gtfFile <- '${gtf}'; \
-        outFile <- '${output_tx2gene}'; \
-        DB <- ensDbFromGtf(gtf = gtfFile); \
-        eDB <- EnsDb(DB); \
-        txs <- keys(x = eDB, keytype = 'TXID'); \
-        tx2gene <- select(x = eDB, keys = txs, keytype = 'TXID', columns = 'GENEID'); \
-        write.csv(tx2gene, outFile, row.names=FALSE); \
+        library(ensembldb);\
+        gtfFile <- '${gtf}';\
+        outFile <- '${output_tx2gene}';\
+        DB <- ensDbFromGtf(gtf = gtfFile);\
+        eDB <- EnsDb(DB);\
+        txs <- keys(x = eDB, keytype = 'TXID');\
+        tx2gene <- select(x = eDB, keys = txs, keytype = 'TXID', columns = 'GENEID');\
+        write.csv(tx2gene, outFile, row.names=FALSE);\
         file.remove(DB)"
 
-    }
+    >>>
 
     runtime {
 
@@ -361,22 +361,23 @@ task tximport {
     Int? cpu 
     String? mem 
     
-    command {
+    command <<<
 
       Rscript -e "
-        txGene <- '${tx2gene}';
-        quantFiles <- '${sep=',' quant_files}';
-        sampleIds <- '${sep=',' sample_ids}';
-        outFile <- '${output_counts}';
-        tx2gene <- read.csv(txGene);
-        quantFiles <- strsplit(quantFiles, ',')[[1]];
-        sampleIds <- strsplit(sampleIds, ',')[[1]];
-        txi <- tximport(files = quantFiles, tx2gene = tx2gene, type = 'salmon', ignoreTxVersion = TRUE, dropInfReps=TRUE, countsFromAbundance = 'lengthScaledTPM');
-        counts <- txi[['counts']];
-        colnames(counts) <- sampleIds;
+        library(tximport);\
+        txGene <- '${tx2gene}';\
+        quantFiles <- '${sep=',' quant_files}';\
+        sampleIds <- '${sep=',' sample_ids}';\
+        outFile <- '${output_counts}';\
+        tx2gene <- read.csv(txGene);\
+        quantFiles <- strsplit(quantFiles, ',')[[1]];\
+        sampleIds <- strsplit(sampleIds, ',')[[1]];\
+        txi <- tximport(files = quantFiles, tx2gene = tx2gene, type = 'salmon', ignoreTxVersion = TRUE, dropInfReps=TRUE, countsFromAbundance = 'lengthScaledTPM');\
+        counts <- txi[['counts']];\
+        colnames(counts) <- sampleIds;\
         write.table(counts, file = outFile, sep = '\t', row.names = TRUE, col.names = NA, quote = FALSE)"
     
-    }
+    >>>
 
     runtime {
 
