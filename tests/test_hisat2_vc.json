@@ -26,6 +26,8 @@
     "MIGNON.db_snp_vcf": "flagForPwd/mignon_test_data/subset_variants.vcf.gz",
     "MIGNON.db_snp_vcf_index": "flagForPwd/mignon_test_data/subset_variants.vcf.gz.tbi",
     "MIGNON.known_vcfs":["flagForPwd/mignon_test_data/subset_variants.vcf.gz"],
-    "MIGNON.known_vcfs_indices": ["flagForPwd/mignon_test_data/subset_variants.vcf.gz.tbi"]
+    "MIGNON.known_vcfs_indices": ["flagForPwd/mignon_test_data/subset_variants.vcf.gz.tbi"],
+    "MIGNON.edger_script": "flagForPwd/scripts/edgeR.r",
+    "MIGNON.hipathia_script": "flagForPwd/scripts/hipathia.r"
 
 }
