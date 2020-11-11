@@ -53,8 +53,8 @@ task mergeCounts {
       Rscript -e "
         input_files <- '${sep=',' count_files}'; \
         file_list <- strsplit(input_files, ','); \
-        table_list <- lapply(file_list[[1]], function(x) read.table(x, sep = '\t', row.names = 1))
-        out_table <- Reduce(cbind, table_list)
+        table_list <- lapply(file_list[[1]], function(x) read.table(x, sep = '\t', row.names = 1)); \
+        out_table <- Reduce(cbind, table_list); \
         write.table(out_table, file = '${output_counts}', sep = '\t', quote = FALSE)"
 
     }

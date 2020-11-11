@@ -1,4 +1,4 @@
-import "MIGNON_htseq_tasks.wdl" as Mignon
+import "MIGNON_tasks.wdl" as Mignon
 import "MIGNON_calling.wdl" as MignonVariantCalling
 import "MIGNON_htseq_tasks.wdl" as MignonHtSeq
 
@@ -206,7 +206,7 @@ workflow MIGNON {
         if (execution_mode == "hisat2" || execution_mode == "star") {
 
             # htseq
-            call Mignon.htseq as htseq {
+            call MignonHtSeq.htseq as htseq {
                 
                 input:
                     input_alignment = select_first([star.bam, bamHisat2.bam]),
@@ -305,7 +305,7 @@ workflow MIGNON {
     if (execution_mode == "hisat2" || execution_mode == "star") {
 
         # merge individual counts
-        call Mignon.mergeCounts as mergeCounts {
+        call MignonHtSeq.mergeCounts as mergeCounts {
             
             input:
                 count_files = htseq.counts,
