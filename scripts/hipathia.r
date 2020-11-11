@@ -57,13 +57,35 @@ if(doVc) {
   
   # read vcf
   vcf <- read.table(file = inputFilteredVcfs, sep = "\t", quote = "", header = TRUE, stringsAsFactors = FALSE)
-
-  # extract ko matrix
-  geneIds <- unlist(lapply(strsplit(vcf$INFO, "\\|"), function(x) x[5]))
+  
+  # build the KO matrix
   koMat <- as.matrix(vcf[, 10:ncol(vcf)])
-  rownames(koMat) <- geneIds
-  koMat <- ifelse(koMat == noKoChar, 1, koFactor)
-
+  koMat[koMat != noKoChar] <- koFactor
+  koMat[koMat == noKoChar] <- 1
+  koMat <- apply(koMat, 2, as.numeric)
+  
+  # extract unique gene IDs
+  geneIds <- unlist(lapply(strsplit(vcf$INFO, "\\|"), function(x) x[5]))
+  uniqueIds <- unique(geneIds)
+  
+  # for each gene, gather KO info
+  minRowList <- lapply(uniqueIds, function(id) {
+    
+    index <- geneIds == id
+    intMat <- koMat[index , ]
+    if(sum(index) == 1) {
+      outRow <- intMat
+    } else {
+      outRow <- colMins(intMat)
+    }
+    return(outRow)
+    
+  })
+  
+  # re-build ko mat
+  koMat <- do.call(rbind, minRowList)
+  rownames(koMat) <- uniqueIds
+  
   # complete ko matrix with missing genes
   notInKoMatrix <- rownames(normMatrix)[!rownames(normMatrix) %in% rownames(koMat)]
   newMat <- matrix(data = 1, nrow = length(notInKoMatrix), ncol = ncol(koMat))
