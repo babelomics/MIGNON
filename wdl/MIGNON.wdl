@@ -55,6 +55,8 @@ workflow MIGNON {
     String? vep_mem = "16G"
     Int? filterBam_cpu = 1
     String? filterBam_mem = "16G"
+    Int? merge_variants_cpu = 1
+    String? merge_variants_mem = "16G"
 
     # number of parallel threads during variant calling
     Int? haplotype_scatter_count = 1
@@ -285,6 +287,35 @@ workflow MIGNON {
 
     }
 
+    if (do_vc) {
+
+            call Mignon.mergeVariants as mergeVariants {
+
+                input:
+                    vcf_files = VariantCalling.variant_filtered_vcf,
+                    vcf_files_index = VariantCalling.variant_filtered_vcf_index,
+                    output_file = "merged_variants.vcf.gz",
+                    cpu = merge_variants_cpu,
+                    mem = merge_variants_mem
+
+            }
+
+             # annotate and filter variants
+            call Mignon.vep as mergedVariantsVep {
+
+                input:
+                    vcf_file = mergeVariants.output_vcf,
+                    output_file = "lof_variants.txt",
+                    cache_dir = vep_cache_dir,
+                    sift_cutoff = vep_sift_cutoff,
+                    polyphen_cutoff = vep_polyphen_cutoff,
+                    cpu = vep_cpu,
+                    mem = vep_mem
+                    
+            }
+
+    }
+
     if (execution_mode == "hisat2" || execution_mode == "star") {
 
         # hisat2 - featureCounts
@@ -376,7 +407,8 @@ workflow MIGNON {
 
         File signaling_matrix = hipathia.path_values
         File differential_signaling = hipathia.diff_signaling
-        
+        File? merged_vcf = mergeVariants.output_vcf
+
     }
 
 

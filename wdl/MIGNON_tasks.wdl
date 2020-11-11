@@ -545,6 +545,38 @@ task vep {
 
 }
 
+# merge variants
+task mergeVariants {
+
+    Array[File?] vcf_files
+    Array[File?] vcf_files_index
+    String output_file
+
+    Int? cpu 
+    String? mem 
+    
+    command {
+
+      bcftools merge --threads ${cpu} ${sep=' ' vcf_files} | bcftools norm -m +both -O z -o ${output_file}
+    
+    }
+
+    runtime {
+
+      docker: "biocontainers/bcftools:v1.9-1-deb_cv1" 
+      cpu: cpu
+      requested_memory: mem
+
+    }
+
+    output {
+
+      File output_vcf = output_file
+      
+    }
+
+}
+
 # report
 task report {
 
