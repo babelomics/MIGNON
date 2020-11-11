@@ -433,7 +433,7 @@ task hipathia {
     Boolean normalize_by_length
     Boolean do_vc
 
-    Array[File?] input_vcfs
+    File? filtered_variants
     Float? ko_factor
     
     File hipathia_script
@@ -448,7 +448,7 @@ task hipathia {
       --group ${sep=',' group} \
       --normalizeByLength ${normalize_by_length} \
       --doVc ${do_vc} \
-      --filteredVariants ${sep = "," input_vcfs} \
+      --filteredVariants ${filtered_variants} \
       --koFactor ${ko_factor}
     
     }
@@ -522,9 +522,11 @@ task vep {
     
     command {
 
-      /opt/vep/src/ensembl-vep/vep --dir_cache ${cache_dir} --offline --sift s --polyphen s --fork ${cpu} -i ${vcf_file} -o variants_annotated.txt
+      /opt/vep/src/ensembl-vep/vep --dir_cache ${cache_dir} --offline --vcf --sift s --polyphen s --fork ${cpu} -i ${vcf_file} -o variants_annotated.vcf
 
-      /opt/vep/src/ensembl-vep/filter_vep -i variants_annotated.txt -o ${output_file} -f "SIFT < ${sift_cutoff} and PolyPhen > ${polyphen_cutoff}"
+      /opt/vep/src/ensembl-vep/filter_vep -i variants_annotated.vcf --format vcf -o ${output_file} -f "SIFT < ${sift_cutoff} and PolyPhen > ${polyphen_cutoff}"
+
+      sed -i 's/#CHROM/CHROM/g' ${output_file}
     
     }
 

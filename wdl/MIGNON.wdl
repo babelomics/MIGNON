@@ -268,20 +268,6 @@ workflow MIGNON {
                     sample_id = sample
                     
             }
-
-            # annotate and filter variants
-            call Mignon.vep as vep {
-
-                input:
-                    vcf_file = VariantCalling.variant_filtered_vcf,
-                    output_file = sample + ".txt",
-                    cache_dir = vep_cache_dir,
-                    sift_cutoff = vep_sift_cutoff,
-                    polyphen_cutoff = vep_polyphen_cutoff,
-                    cpu = vep_cpu,
-                    mem = vep_mem
-                    
-            }
                     
         }
 
@@ -305,7 +291,7 @@ workflow MIGNON {
 
                 input:
                     vcf_file = mergeVariants.output_vcf,
-                    output_file = "lof_variants.txt",
+                    output_file = "lof_variants.vcf",
                     cache_dir = vep_cache_dir,
                     sift_cutoff = vep_sift_cutoff,
                     polyphen_cutoff = vep_polyphen_cutoff,
@@ -396,7 +382,7 @@ workflow MIGNON {
             group = group,
             normalize_by_length = hipathia_normalize,
             do_vc = do_vc,
-            input_vcfs = vep.output_vcf,
+            filtered_variants = mergedVariantsVep.output_vcf,
             ko_factor = hipathia_ko_factor,
             cpu = hipathia_cpu,
             mem = hipathia_mem
