@@ -13,7 +13,6 @@ samples <- args[grep("--samples",args)+1]
 group <- args[grep("--group",args)+1]
 doVc <- args[grep("--doVc",args)+1]
 normalizeByLength <- args[grep("--normalizeByLength",args)+1]
-noKoChar <- "	./.:.:.:.:."
 
 # if variant calling is performed, then capture the KO parameters
 doVc <- as.logical(doVc)
@@ -55,47 +54,40 @@ if(doVc) {
   
   message("Performing in-silico knockout...")
   
-  # read vcf
-  vcf <- read.table(file = inputFilteredVcfs, sep = "\t", quote = "", header = TRUE, stringsAsFactors = FALSE)
+  inputFilteredVcfs <- strsplit(inputFilteredVcfs, ",")[[1]]
   
-  # build the KO matrix
-  koMat <- as.matrix(vcf[, 10:ncol(vcf)])
-  koMat[koMat != noKoChar] <- koFactor
-  koMat[koMat == noKoChar] <- 1
-  koMat <- apply(koMat, 2, as.numeric)
-  
-  # extract unique gene IDs
-  geneIds <- unlist(lapply(strsplit(vcf$INFO, "\\|"), function(x) x[5]))
-  uniqueIds <- unique(geneIds)
-  
-  # for each gene, gather KO info
-  minRowList <- lapply(uniqueIds, function(id) {
-    
-    index <- geneIds == id
-    intMat <- koMat[index , ]
-    if(sum(index) == 1) {
-      outRow <- intMat
+  # read vcfs
+  genesBySample <- lapply(inputFilteredVcfs, function(x) {
+    # try to read vcf
+    vcf <- try(read.table(file = x, header = FALSE, sep = "\t", stringsAsFactors = FALSE, ))
+    # return NA if error, otherwise return unique genes
+    if(inherits(vcf, "try-error")) {
+      return(NA)
     } else {
-      outRow <- colMins(intMat)
+      genes <- unique(vcf[,4])
+      return(genes)
     }
-    return(outRow)
-    
   })
   
-  # re-build ko mat
-  koMat <- do.call(rbind, minRowList)
-  rownames(koMat) <- uniqueIds
+  # set names using filename
+  names(genesBySample) <- gsub(pattern = ".txt", replacement = "",  basename(inputFilteredVcfs))
   
-  # complete ko matrix with missing genes
-  notInKoMatrix <- rownames(normMatrix)[!rownames(normMatrix) %in% rownames(koMat)]
-  newMat <- matrix(data = 1, nrow = length(notInKoMatrix), ncol = ncol(koMat))
-  rownames(newMat) <- notInKoMatrix
-  colnames(newMat) <- colnames(koMat)
-  koMat <- rbind(koMat, newMat)
-  koMat <- koMat[rownames(normMatrix), colnames(normMatrix)]
+  # remove empty files and genes not in the matrix
+  genesBySample <- genesBySample[!is.na(genesBySample)]
+  genesBySample <- lapply(genesBySample, function(x) x[x %in% rownames(normMatrix)])
 
-  # perform in silico ko
-  normMatrix <- normMatrix * koMat
+  # create koMatrix
+  koMatrix <- matrix(1, nrow = nrow(normMatrix), ncol = ncol(normMatrix))
+  rownames(koMatrix) <- rownames(normMatrix)
+  colnames(koMatrix) <- colnames(normMatrix)
+
+  # sub 1 by 0.01 in altered genes
+  for( sample in names(genesBySample) ) {
+    koMatrix[ genesBySample[[sample]] , sample ] <- koFactor
+  }
+  
+  # use koMatrix to perform insilico ko
+  normMatrix <- normMatrix * koMatrix
 
 }
 
@@ -150,6 +142,6 @@ message("Writting output...")
 write.table(x = pathValues, file = "path_values.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
 write.table(x = df, file = "differential_signaling.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
 write.table(x = normMatrix, file = "scaled_matrix.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
-if(doVc) write.table(x = koMat, file = "ko_matrix.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
+if(doVc) write.table(x = koMatrix, file = "ko_matrix.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
 
 message("Done!")

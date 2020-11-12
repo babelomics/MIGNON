@@ -9,10 +9,12 @@ task fastp {
     String output_json
     String output_html
 
+    Int mean_quality
+    Int required_length
+    Int window_size
+
     Int? cpu 
     String? mem 
-
-    String? additional_parameters
 
     command {
 
@@ -23,7 +25,10 @@ task fastp {
           -j ${output_json} \
           -h ${output_html} \
           --thread ${cpu} \
-          ${additional_parameters}
+          --cut_right \
+          --cut_right_window_size ${window_size} \
+          --cut_right_mean_quality ${mean_quality} \
+          --length_required ${required_length} 
 
     }
 
@@ -58,13 +63,10 @@ task fastqc {
     Int? cpu 
     String? mem 
 
-    String? additional_parameters
-
     command {
 
       fastqc -t ${cpu} -o . \
-             ${additional_parameters} \
-             ${input_fastq_r1} ${input_fastq_r2} 
+             ${input_fastq_r1} ${input_fastq_r2}
 
     }
 
@@ -104,15 +106,12 @@ task hisat2 {
 
     Int? cpu 
     String? mem 
-
-    String? additional_parameters
     
     String opt_fastq_r1 = if (is_paired_end) then "-1" else "-U"
 
     command {
 
       hisat2 -p ${cpu} -x ${index_path}/${index_prefix} \
-             ${additional_parameters} \
              --new-summary --summary-file ${output_summary} \
              ${opt_fastq_r1} ${input_fastq_r1} \
              ${"-2 " + input_fastq_r2} \
@@ -149,11 +148,9 @@ task sam2bam {
     Int? cpu 
     String? mem 
 
-    String? additional_parameters
-
     command {
 
-      samtools sort ${input_sam} ${additional_parameters} --threads ${cpu} -O BAM -o ${output_bam}
+      samtools sort ${input_sam} --threads ${cpu} -O BAM -o ${output_bam}
 
     }
 
@@ -187,8 +184,6 @@ task star {
     Int? cpu 
     String? mem 
 
-    String? additional_parameters
-
     String opt_compression = if (compression == ".gz") then "--readFilesCommand zcat" else ""
 
     command {
@@ -198,8 +193,7 @@ task star {
            --readFilesIn ${input_fastq_r1} ${input_fastq_r2} \
            ${opt_compression} \
            --outSAMtype BAM SortedByCoordinate \
-           --outFileNamePrefix ${output_prefix} \
-           ${additional_parameters}
+           --outFileNamePrefix ${output_prefix}
 
     }
 
@@ -237,8 +231,6 @@ task salmon {
     Int? cpu 
     String? mem 
 
-    String? additional_parameters
-
     String opt_fastq_r1 = if (is_paired_end) then "-1" else "-r"
 
     command {
@@ -246,8 +238,7 @@ task salmon {
       salmon quant -p ${cpu} -i ${index_path} -l ${library_type} \
                        ${opt_fastq_r1} ${input_fastq_r1} \
                        ${"-2 " + input_fastq_r2} \
-                       -o ${output_dir} \
-                       ${additional_parameters}
+                       -o ${output_dir}
 
     }
 
@@ -280,12 +271,9 @@ task featureCounts {
     Int? cpu 
     String? mem 
 
-    String? additional_parameters
-
     command {
 
-      featureCounts ${additional_parameters} \
-                    -T ${cpu} -a ${gtf} -o ${output_counts}.raw ${sep=' ' input_alignments}
+      featureCounts -T ${cpu} -a ${gtf} -o ${output_counts}.raw ${sep=' ' input_alignments}
       
       # format count matrix
       sed -r 's#[^\t]+/([^\/\t]+)\.[bs]am#\1#g' ${output_counts}.raw | sed -r 's#Aligned\.sortedByCoord\.out##g' | sed '1d' | cut -f 1,7- > ${output_counts}
@@ -433,7 +421,7 @@ task hipathia {
     Boolean normalize_by_length
     Boolean do_vc
 
-    File? filtered_variants
+    Array[File?] input_vcfs
     Float? ko_factor
     
     File hipathia_script
@@ -448,7 +436,7 @@ task hipathia {
       --group ${sep=',' group} \
       --normalizeByLength ${normalize_by_length} \
       --doVc ${do_vc} \
-      --filteredVariants ${filtered_variants} \
+      --filteredVariants ${sep = "," input_vcfs} \
       --koFactor ${ko_factor}
     
     }
@@ -466,39 +454,6 @@ task hipathia {
         File diff_signaling = "differential_signaling.tsv"
         File path_values = "path_values.tsv"
         File? ko_matrix = "ko_matrix.tsv"
-
-    }
-
-}
-
-# FILTERUNMAPED
-task filterBam {
-  
-    File input_bam
-    String output_bam
-
-    Int? cpu 
-    String? mem 
-
-    String? additional_parameters
-
-    command {
-
-      samtools view ${additional_parameters} -F 4 --threads ${cpu} -O BAM -o ${output_bam} ${input_bam}
-
-    }
-
-    runtime {
-
-      docker: "quay.io/biocontainers/samtools:1.9--h8571acd_11"    
-      cpu: cpu
-      requested_memory: mem
-
-    }
-
-    output {
-
-      File bam = output_bam
 
     }
 
@@ -522,11 +477,9 @@ task vep {
     
     command {
 
-      /opt/vep/src/ensembl-vep/vep --dir_cache ${cache_dir} --offline --vcf --sift s --polyphen s --fork ${cpu} -i ${vcf_file} -o variants_annotated.vcf
+      /opt/vep/src/ensembl-vep/vep --dir_cache ${cache_dir} --offline --sift s --polyphen s --fork ${cpu} -i ${vcf_file} -o variants_annotated.txt
 
-      /opt/vep/src/ensembl-vep/filter_vep -i variants_annotated.vcf --format vcf -o ${output_file} -f "SIFT < ${sift_cutoff} and PolyPhen > ${polyphen_cutoff}"
-
-      sed -i 's/#CHROM/CHROM/g' ${output_file}
+      /opt/vep/src/ensembl-vep/filter_vep -i variants_annotated.txt -o ${output_file} -f "SIFT < ${sift_cutoff} and PolyPhen > ${polyphen_cutoff}"
     
     }
 
@@ -534,38 +487,6 @@ task vep {
 
       docker: "ensemblorg/ensembl-vep:release_99.1" 
       docker_volume: cache_dir
-      cpu: cpu
-      requested_memory: mem
-
-    }
-
-    output {
-
-      File output_vcf = output_file
-      
-    }
-
-}
-
-# merge variants
-task mergeVariants {
-
-    Array[File?] vcf_files
-    Array[File?] vcf_files_index
-    String output_file
-
-    Int? cpu 
-    String? mem 
-    
-    command {
-
-      bcftools merge --threads ${cpu} ${sep=' ' vcf_files} | bcftools norm -m +both -O z -o ${output_file}
-    
-    }
-
-    runtime {
-
-      docker: "biocontainers/bcftools:v1.9-1-deb_cv1" 
       cpu: cpu
       requested_memory: mem
 
