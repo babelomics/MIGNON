@@ -1,7 +1,2 @@
-cromwell-executions/*
-cromwell-workflow-logs/*
-docs/_site
-docs/Gemfile.lock
-mignon_test_data*
-cookie
-current_test_input.json
+_site
+Gemfile.lock
