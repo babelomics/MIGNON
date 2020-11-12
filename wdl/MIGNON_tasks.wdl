@@ -9,12 +9,10 @@ task fastp {
     String output_json
     String output_html
 
-    Int mean_quality
-    Int required_length
-    Int window_size
-
     Int? cpu 
     String? mem 
+
+    String? additional_parameters
 
     command {
 
@@ -25,10 +23,7 @@ task fastp {
           -j ${output_json} \
           -h ${output_html} \
           --thread ${cpu} \
-          --cut_right \
-          --cut_right_window_size ${window_size} \
-          --cut_right_mean_quality ${mean_quality} \
-          --length_required ${required_length} 
+          ${additional_parameters}
 
     }
 
@@ -63,10 +58,13 @@ task fastqc {
     Int? cpu 
     String? mem 
 
+    String? additional_parameters
+
     command {
 
       fastqc -t ${cpu} -o . \
-             ${input_fastq_r1} ${input_fastq_r2}
+             ${additional_parameters} \
+             ${input_fastq_r1} ${input_fastq_r2} 
 
     }
 
@@ -106,12 +104,15 @@ task hisat2 {
 
     Int? cpu 
     String? mem 
+
+    String? additional_parameters
     
     String opt_fastq_r1 = if (is_paired_end) then "-1" else "-U"
 
     command {
 
       hisat2 -p ${cpu} -x ${index_path}/${index_prefix} \
+             ${additional_parameters} \
              --new-summary --summary-file ${output_summary} \
              ${opt_fastq_r1} ${input_fastq_r1} \
              ${"-2 " + input_fastq_r2} \
@@ -148,9 +149,11 @@ task sam2bam {
     Int? cpu 
     String? mem 
 
+    String? additional_parameters
+
     command {
 
-      samtools sort ${input_sam} --threads ${cpu} -O BAM -o ${output_bam}
+      samtools sort ${input_sam} ${additional_parameters} --threads ${cpu} -O BAM -o ${output_bam}
 
     }
 
@@ -184,6 +187,8 @@ task star {
     Int? cpu 
     String? mem 
 
+    String? additional_parameters
+
     String opt_compression = if (compression == ".gz") then "--readFilesCommand zcat" else ""
 
     command {
@@ -193,7 +198,8 @@ task star {
            --readFilesIn ${input_fastq_r1} ${input_fastq_r2} \
            ${opt_compression} \
            --outSAMtype BAM SortedByCoordinate \
-           --outFileNamePrefix ${output_prefix}
+           --outFileNamePrefix ${output_prefix} \
+           ${additional_parameters}
 
     }
 
@@ -231,6 +237,8 @@ task salmon {
     Int? cpu 
     String? mem 
 
+    String? additional_parameters
+
     String opt_fastq_r1 = if (is_paired_end) then "-1" else "-r"
 
     command {
@@ -238,7 +246,8 @@ task salmon {
       salmon quant -p ${cpu} -i ${index_path} -l ${library_type} \
                        ${opt_fastq_r1} ${input_fastq_r1} \
                        ${"-2 " + input_fastq_r2} \
-                       -o ${output_dir}
+                       -o ${output_dir} \
+                       ${additional_parameters}
 
     }
 
@@ -271,9 +280,12 @@ task featureCounts {
     Int? cpu 
     String? mem 
 
+    String? additional_parameters
+
     command {
 
-      featureCounts -T ${cpu} -a ${gtf} -o ${output_counts}.raw ${sep=' ' input_alignments}
+      featureCounts ${additional_parameters} \
+                    -T ${cpu} -a ${gtf} -o ${output_counts}.raw ${sep=' ' input_alignments}
       
       # format count matrix
       sed -r 's#[^\t]+/([^\/\t]+)\.[bs]am#\1#g' ${output_counts}.raw | sed -r 's#Aligned\.sortedByCoord\.out##g' | sed '1d' | cut -f 1,7- > ${output_counts}
@@ -454,6 +466,39 @@ task hipathia {
         File diff_signaling = "differential_signaling.tsv"
         File path_values = "path_values.tsv"
         File? ko_matrix = "ko_matrix.tsv"
+
+    }
+
+}
+
+# FILTERUNMAPED
+task filterBam {
+  
+    File input_bam
+    String output_bam
+
+    Int? cpu 
+    String? mem 
+
+    String? additional_parameters
+
+    command {
+
+      samtools view ${additional_parameters} -F 4 --threads ${cpu} -O BAM -o ${output_bam} ${input_bam}
+
+    }
+
+    runtime {
+
+      docker: "quay.io/biocontainers/samtools:1.9--h8571acd_11"    
+      cpu: cpu
+      requested_memory: mem
+
+    }
+
+    output {
+
+      File bam = output_bam
 
     }
 
