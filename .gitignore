@@ -1,3 +1,5 @@
 cromwell-executions/*
 cromwell-workflow-logs/*
 mignon_test_data*
+_site
+Gemfile.lock
