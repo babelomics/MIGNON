@@ -1,4 +1,4 @@
-# MIGNON  <img src="docs/pics/icon.png" align="right" height="200" />
+# MIGNON  <img src="img/icon.png" align="right" height="200" />
 
 [![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
