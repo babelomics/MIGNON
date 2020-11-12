@@ -4,7 +4,7 @@ Welcome to MIGNON's documentation!
 
 # About
 
-<img src="img/icon.png" width="100">
+<img src="img/icon_horizontal.png" width="1000">
 
 [![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
