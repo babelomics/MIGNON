@@ -1,5 +1,6 @@
 import "MIGNON_tasks.wdl" as Mignon
 import "MIGNON_calling.wdl" as MignonVariantCalling
+import "MIGNON_htseq_tasks.wdl" as MignonHtSeq
 
 workflow MIGNON {
 
@@ -49,8 +50,6 @@ workflow MIGNON {
     String? star_mem = "32G"
     Int? salmon_cpu = 1
     String?  salmon_mem = "16G"
-    Int? featureCounts_cpu = 1
-    String? featureCounts_mem = "16G"
     Int? vep_cpu = 1
     String? vep_mem = "16G"
     Int? filterBam_cpu = 1
@@ -91,7 +90,6 @@ workflow MIGNON {
     String? sam2bam_additional_parameters = ""
     String? star_additional_parameters = ""
     String? salmon_additional_parameters = ""
-    String? featureCounts_additional_parameters = ""
     String? filterBam_additional_parameters = ""
 
     ###############
@@ -199,8 +197,27 @@ workflow MIGNON {
                     additional_parameters = star_additional_parameters
 
             }
+        
 
             String starAligner = "star"  
+
+        }
+
+        if (execution_mode == "hisat2" || execution_mode == "star") {
+
+            # htseq
+            call MignonHtSeq.htseq as htseq {
+                
+                input:
+                    input_alignment = select_first([star.bam, bamHisat2.bam]),
+                    gtf = gtf_file,
+                    sample_id = sample,
+                    output_counts = sample + "_counts.tsv",
+                    cpu = 1,
+                    mem = "16G",
+                    additional_parameters = ""
+
+            }
 
         }
 
@@ -287,16 +304,14 @@ workflow MIGNON {
 
     if (execution_mode == "hisat2" || execution_mode == "star") {
 
-        # hisat2 - featureCounts
-        call Mignon.featureCounts as featureCounts {
+        # merge individual counts
+        call MignonHtSeq.mergeCounts as mergeCounts {
             
             input:
-                input_alignments = select_all(flatten([bamHisat2.bam, star.bam])),
-                gtf = gtf_file,
+                count_files = htseq.counts,
                 output_counts = "counts.tsv",
-                cpu = featureCounts_cpu,
-                mem = featureCounts_mem,
-                additional_parameters = featureCounts_additional_parameters
+                cpu = 1,
+                mem = "16G"
 
         }
 
@@ -345,7 +360,7 @@ workflow MIGNON {
     call Mignon.edgeR as edgeR {
         
         input:
-            counts = select_first([txImport.counts, featureCounts.counts]),
+            counts = select_first([txImport.counts, mergeCounts.counts]),
             edger_script = edger_script,
             samples = sample_id,
             group = group,
