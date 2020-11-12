@@ -2,16 +2,9 @@
 
 Welcome to MIGNON's documentation!
 
-1. [Installation](1_installation.md)
-2. [Run MIGNON example](2_run_example.md)
-3. [Input](3_input.md)
-4. [Execution modes](4_execution_modes.md)
-5. [Output](5_output.md)
-6. [Parallelization](6_parallelization.md)
-
 # About
 
-<img src="pics/icon.png" width="100">
+<img src="img/icon.png" width="100">
 
 [![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
