@@ -1,16 +1,16 @@
 title: MIGNON
-site_author: Martin Garrido Rodriguez-Cordoba
-repo_url: 'https://github.com/babelomics/MIGNON'
-edit_on_github: true
-description: Mechanistic integrative analysis of RNA-Seq data
-remote_theme: pmarsceill/just-the-docs
-logo: pics/icon.png
-search_enabled: true
-edit_on_github: true
-footer_content: "Copyright &copy; 2020 Martin Garrido Rodriguez-Cordoba at the <a href=\"http://www.clinbioinfosspa.es/\">Clinical Bioinformatics Area</a> and <a href=\"https://www.imibic.org/\">IMIBIC GC04 Group.</a>"
-color_scheme: "dark"
-aux_links:
-    "MIGNON on GitHub":
-      - "https://github.com/babelomics/MIGNON"
-    "HiPathia web":
-      - "http://hipathia.babelomics.org/"
+
+author: Martin Garrido Rodriguez-Cordoba
+
+description: Workflow for the mechanistic integrative analysis of RNA-Seq data 
+ 
+theme: minima
+
+favicon: img/icon.png
+
+minima:
+  skin: dark
+  social_links:
+    twitter: martingarridorc
+    github: martingarridorc
+

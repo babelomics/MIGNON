@@ -1,10 +1,15 @@
+---
+layout: default
+image: img/icon_horizontal.png
+---
+
 # Home
 
 Welcome to MIGNON's documentation!
 
 # About
 
-<img src="img/icon_horizontal.png" width="1000">
+<img src="img/MIGNON_logo_horizontal.svg" width="1000">
 
 [![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 
