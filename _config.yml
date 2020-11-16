@@ -2,15 +2,7 @@ title: MIGNON
 
 author: Martin Garrido Rodriguez-Cordoba
 
-description: Workflow for the mechanistic integrative analysis of RNA-Seq data 
+description: Bioinformatic workflow for the mechanistic integrative analysis of RNA-Seq data 
  
 theme: minima
-
-favicon: img/icon.png
-
-minima:
-  skin: dark
-  social_links:
-    twitter: martingarridorc
-    github: martingarridorc
 

@@ -1,52 +1,64 @@
 ---
 layout: default
 title: Installation
-nav_order: 1
+nav_order: 2
 ---
 
-# Installation
+## Requirements
 
-In order to execute the workflow, the user needs to be able of launching the [cromwell](https://github.com/broadinstitute/cromwell) engine, regardless of where it is deployed. It is recommended to read the [five minutes intro](https://cromwell.readthedocs.io/en/stable/tutorials/FiveMinuteIntro/) created by the Broad Institute team, which explain the basic operations that can be performed using their software. Additionally, as the tools employed by the workflow are used as [docker](https://www.docker.com/) containers, the system where the pipeline is deployed should have an engine able to run the containerized software. We have tested the workflow both locally with [docker](https://www.docker.com/) and in a High Performance Computing (HPC) environment, executing the containers with [singularity](https://sylabs.io/guides/3.5/user-guide/). Theoretically, it is also deployable within the [terra](https://terra.bio/) platform, which makes use of cloud computing services to execute WDL workflows.
+From a programmatic perspective, MIGNON is a chain of tasks written in the [Workflow Description Language](https://github.com/openwdl/wdl). Users need to install and download the following software to execute the workflow:
 
-**Requirements**:
+### [Java](https://www.java.com/es/download/)
 
-* [Java (v.1.8.0)](https://www.java.com/es/download/)
-* [Cromwell releases](https://github.com/broadinstitute/cromwell/releases)
-* [Docker](https://www.docker.com/)
-
-In order to execute MIGNON with cromwell, we have prepared two configuration files to run the workflow both locally and in a Slurm + Singularity HPC environment. They can be found at the [config directory](https://github.com/babelomics/MIGNON/tree/master/configs). After preparing the input and downloading the cromwell jar, users can clone the repository:
+Java is used to execute the workflow management software that interprets and launch the different tasks within the pipeline. Once installed, users can check the version with `java -version`:
 
 ```
-$ git clone https://github.com/babelomics/MIGNON.git
-$ cd MIGNON
+$ java -version
+openjdk version "1.8.0_275"
+OpenJDK Runtime Environment (build 1.8.0_275-8u275-b01-0ubuntu1~18.04-b01)
+OpenJDK 64-Bit Server VM (build 25.275-b01, mixed mode)
 ```
 
-And execute MIGNON locally with docker:
+### [Docker](https://www.docker.com/)
+
+Docker (or any engine able to run docker containers, as [Singularity](https://sylabs.io/docs/) is used to execute all the tasks of the workflow within an isolated unit of containerized software, freeing users to install each of the needed components of the pipeline. Once installed, users should be able to get the following output after executing `docker run hello-world`:
 
 ```
-$ java -Dconfig.file=configs/LocalWithDocker.conf -jar /path/to/cromwell.jar run wdl/MIGNON.wdl /path/to/input.json
+$ docker run hello-world
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
 ```
 
-Or in HPC environments with Slurm and Singularity:
+### [Cromwell](https://github.com/broadinstitute/cromwell)
+
+Users need to download the **cromwell-XX.jar** file that can be retrieved from the cromwell releases page. Particularly, MIGNON was tested with the release 47 of cromwell, which can be obtained in the [following link](https://github.com/broadinstitute/cromwell/releases/tag/47). Cromwell is the scientific workflow engine that interprets and executes the pipeline. It is the software why users need to have Java v1.8.0 installed.
+
+### [MIGNON](https://github.com/babelomics/MIGNON/)
+
+Users can download the latest MIGNON code from our Github repository. Users with [git](https://git-scm.com/) can clone the repository using:
 
 ```
-$ java -Dconfig.file=configs/SlurmAndSingularity.conf -jar /path/to/cromwell.jar run wdl/MIGNON.wdl /path/to/input.json
+$git clone https://github.com/babelomics/MIGNON.git
 ```
-## List of containers
+On the other hand, if you are not using git, you can get a zipped version of the code on the following link.
 
-The following list of docker containers are used during the execution of the workflow:
-
-| Tool     | Version  | Docker container                                                                                                                                                                                        |
-|----------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| fastp    | v0.20.0  | [quay.io/biocontainers/fastp:0.20.0](quay.io/biocontainers/fastp:0.20.0)                                                                                                                                |
-| fastqc   | v0.11.5  | [biocontainers/fastqc:v0.11.5_cv4](https://hub.docker.com/layers/biocontainers/fastqc/v0.11.5_cv4/images/sha256-387748462c7fc280b7959ceda0f6251190d2e4b9ebc0585d24e7bcb58bdcf2bf?context=explore)       |
-| samtools | v1.9     | [quay.io/biocontainers/samtools:1.9](quay.io/biocontainers/samtools:1.9)                                                                                                                                |
-| HISAT2   | v2.1.0   | [quay.io/biocontainers/hisat2:2.1.0](quay.io/biocontainers/hisat2:2.1.0)                                                                                                                                |
-| STAR     | v.2.7.2b | [quay.io/biocontainers/star:2.7.2b](quay.io/biocontainers/star:2.7.2b)                                                                                                                                  |
-| salmon   | v.0.13.0 | [quay.io/biocontainers/salmon:0.13.0](quay.io/biocontainers/salmon:0.13.0)                                                                                                                              |
-| GATK     | v4.1.3.0 | [broadinstitute/gatk:4.1.3.0](https://hub.docker.com/layers/broadinstitute/gatk/4.1.3.0/images/sha256-e37193b61536cf21a2e1bcbdb71eac3d50dcb4917f4d7362b09f8d07e7c2ae50?context=explore)                 |
-| picard   | v2.20.7  | [broadinstitute/picard:2.20.7](https://hub.docker.com/layers/broadinstitute/picard/2.20.7/images/sha256-a8aee5af2e485b23c2498b6e9271133ab355a1e5e3c62a7e2b96f84ba60978ee?context=explore)               |
-| VeP      | v99      | [ensemblorg/ensembl-vep:release_99.1](https://hub.docker.com/layers/ensemblorg/ensembl-vep/release_99.1/images/sha256-ca890d3d06d8ebddfb6126a1e4e257aa516f0522e75513994e797d97dca7c9af?context=explore) |
-| txImport | v1.10.0  | [quay.io/biocontainers/bioconductor-tximport:1.10.0](quay.io/biocontainers/bioconductor-tximport:1.10.0)                                                                                                |
-| edgeR    | v3.28.0  | [quay.io/biocontainers/bioconductor-edger:3.28.0](quay.io/biocontainers/bioconductor-edger:3.28.0)                                                                                                      |
-| hipathia | v2.2.0   | [quay.io/biocontainers/bioconductor-hipathia:2.2.0](quay.io/biocontainers/bioconductor-hipathia:2.2.0)                                                                                                  |
+```
