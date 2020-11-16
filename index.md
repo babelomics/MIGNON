@@ -1,7 +1,6 @@
 ---
 layout: default
 title: MIGNON
-nav_order: 1
 ---
 
 # Welcome to MIGNON’s documentation!
@@ -26,10 +25,10 @@ nav_order: 1
 * Is the expression of **gene X** altered in response to my stimulus?
 * How do the pathway level results change if I do not include the genomic information?
 
-## How can I use MIGNON?
+## Who can use MIGNON?
 
-MIGNON is freely available in the following repository under the MIT license:
+Everyone! MIGNON is freely available in the following repository under the MIT license:
 
-* [Link to MIGNON repository](https://github.com/babelomics/MIGNON/)
+* [**Link to MIGNON repository**](https://github.com/babelomics/MIGNON/)
 
 To install and use MIGNON, please visit the [installation page](1_installation.md).
