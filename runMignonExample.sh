@@ -18,3 +18,7 @@ java -Dconfig.file=${PWD}/tests/travisWithDocker.conf -jar ${PWD}/mignon_test_da
 java -Dconfig.file=${PWD}/tests/travisWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_star.json
 java -Dconfig.file=${PWD}/tests/travisWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_salmon.json
 java -Dconfig.file=${PWD}/tests/travisWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON_htseq.wdl -i test_star.json
+
+# create and move all the outputs to the new directory
+mkdir -p dry_run
+mv -f test_hisat2_vc.json test_star.json test_salmon.json cromwell-execution cromwell-workflow-logs dry_run
