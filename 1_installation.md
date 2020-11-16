@@ -3,9 +3,23 @@ layout: default
 title: Installation
 ---
 
+# Quick start
+
+Users with experience on workflow managers and containers can directly clone and execute the dry run of the workflow if they already have [Git](https://git-scm.com/), [Java (v1.8.0)](https://www.java.com/es/download/) and [docker](https://www.docker.com/) installed. This can be done by executing the following commands on your terminal:
+
+```
+git clone https://github.com/babelomics/MIGNON.git
+cd MIGNON
+bash runMignonExample.sh
+```
+
+After completing the dry runs, the results of the pipeline can be found at the `dry_run/cromwell-executions` directory. 
+
+On the other hand, we encourage users with less experience to fully read the installation guide before executing the workflow.
+
 # Requirements
 
-From a programmatic perspective, MIGNON is a chain of tasks written in the [Workflow Description Language](https://github.com/openwdl/wdl). Users need to install and download the following software to execute the workflow:
+From a programmatic perspective, MIGNON is a chain of tasks written in the [Workflow Description Language](https://github.com/openwdl/wdl). Users need to install and download the following software to be able to run it:
 
 ## [Java](https://www.java.com/es/download/)
 
