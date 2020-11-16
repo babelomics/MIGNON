@@ -21,6 +21,5 @@ java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_d
 
 # create and move all the outputs to the new directory
 mkdir -p dry_run
-mv -f test_hisat2_vc.json test_star.json test_salmon.json cromwell-execution cromwell-workflow-logs dry_run
-
+mv -f test_hisat2_vc.json test_star.json test_salmon.json cromwell-executions cromwell-workflow-logs dry_run
 echo "MIGNON: Success!! Dry run completed. You are ready to execute MIGNON."
