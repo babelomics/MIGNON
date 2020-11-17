@@ -83,92 +83,45 @@ In addition, the following figure shows which steps of the workflow are carried 
 
 # Preparing the JSON
 
-As explained before, the JSON file is used to store file paths, workflow variables and execution parameters. For MIGNON, the values that should be included in this file can be divided in three different types: Required values, execution values and default values.
+As explained before, the JSON file is used to store and register the file paths, workflow variables and execution parameters. For MIGNON, the values that should be included in this file can be divided in three different types: [Required values](#required-values), [execution values](#execution-values) and [default values](#default-values).
 
 ## Required values
 
-The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling. The following table contains the basic information about each required value. The "preferred source" column details the source for the reference material that was used for executing the workflow.
+The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling. The following table contains the basic information about each value and the execution modes where it is required. The "preferred source" column details the source for the reference material that was used for executing the workflow.
 
-| Input               | Required at                                     | Variable type | File format | Preferred source                                                                                                      |
-|---------------------|-------------------------------------------------|---------------|-------------|-----------------------------------------------------------------------------------------------------------------------|
-| is_paired_end       | All                                             | Boolean       | -           | -                                                                                                                     |
-| input_fastq_r1      | All                                             | Array[File]   | fastq       | -                                                                                                                     |
-| input_fastq_r2      | All                                             | Array[File]   | fastq       | -                                                                                                                     |
-| sample_id           | All                                             | Array[String] | -           | -                                                                                                                     |
-| group               | All                                             | Array[String] | -           | -                                                                                                                     |
-| execution_mode      | -                                               | String        | -           | -                                                                                                                     |
-| do_vc               | "salmon-star", "salmon-hisat", "hisat2", "star" | Boolean       | -           | -                                                                                                                     |
-| gtf_file            | All                                             | File          | gtf         | [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.gtf.gz)                        |
-| ref_fasta           | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | fasta       | [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz) |
-| ref_fasta_index     | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | fai         | Created from ref_fasta with samtools.                                                                                 |
-| ref_dict            | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | dict        | Created from ref_fasta with samtools.                                                                                 |
-| db_snp_vcf          | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | vcf         | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz)                       |
-| db_snp_vcf_index    | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | tbi         | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi)                  |
-| known_vcfs          | "salmon-star", "salmon-hisat", "hisat2", "star" | Array[File]   | vcf         | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz)                       |
-| known_vcfs_indices  | "salmon-star", "salmon-hisat", "hisat2", "star" | Array[File]   | tbi         | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi)                  |
-| vep_cache_dir       | "salmon-star", "salmon-hisat", "hisat2", "star" | String        | -           | [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/)                                          |
-| hisat2_index_path   | "salmon-hisat", "hisat2"                        | String        | -           | Created from ref_fasta with HISAT2.                                                                                   |
-| hisat2_index_prefix | "salmon-hisat", "hisat2"                        | String        | -           | -                                                                                                                     |
-| star_index_path     | "salmon-star", "star"                           | String        | -           | Created from ref_fasta with STAR.                                                                                     |
-| salmon_index_path   | "salmon", "salmon-star", "salmon-hisat2"        | String        | -           | Created from ref_fasta with STAR.                                                                                     |
-| edger_script        | All                                             | File          | -           | Included in MIGNON.                                                                                                   |
-| tximport_script     | "salmon", "salmon-star", "salmon-hisat2"        | File          | -           | Included in MIGNON.                                                                                                   |
-| hipathia_script     | All                                             | File          | -           | Included in MIGNON.                                                                                                   |
-| ensemblTx_script    | "salmon", "salmon-star", "salmon-hisat2"        | File          | -           | Included in MIGNON.                                                                                                   |
+| Input               | Required at                                     | Variable type | File format | Description                                                                                                                                                                                                                                                  | Preferred source                                                                                                      |
+|---------------------|-------------------------------------------------|---------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| is_paired_end       | All                                             | Boolean       | -           | Are input reads paired-end?                                                                                                                                                                                                                                  | -                                                                                                                     |
+| input_fastq_r1      | All                                             | Array[File]   | fastq       | Array of paths indicating the location of the fastq files to be processed. If paired-end, the path to the (_1) files.                                                                                                                                        | -                                                                                                                     |
+| input_fastq_r2      | All                                             | Array[File]   | fastq       | If paired-end, the path to the (_2) files. The position of each element in the array should match its pair in the input_fastq_r1 variable.                                                                                                                   | -                                                                                                                     |
+| sample_id           | All                                             | Array[String] | -           | Array of sample identifiers. Those identifiers will be used across the different tasks to the pipeline to identify each input sample. The position of each element in the array should match its pair in the input_fastq_r1 variable.                        | -                                                                                                                     |
+| group               | All                                             | Array[String] | -           | Array of string indicating the group of samples for each read file. Those groups will be used to perform the differential expression and signaling analyses. The position of each element in the array should match its pair in the input_fastq_r1 variable. | -                                                                                                                     |
+| execution_mode      | -                                               | String        | -           | String indicating the execution mode to be used.                                                                                                                                                                                                             | -                                                                                                                     |
+| do_vc               | "salmon-star", "salmon-hisat", "hisat2", "star" | Boolean       | -           | Perform the variant calling? Only in case users do not want to extract and use variants from RNA-Seq data.                                                                                                                                                   | -                                                                                                                     |
+| gtf_file            | All                                             | File          | gtf         | Annotation file for the genome used at alignment and variant calling. It is also the input to create the transcript-to-gene file neccesary for the salmon quantifications.                                                                                   | [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/gtf/homo_sapiens/Homo_sapiens.GRCh38.99.gtf.gz)                        |
+| ref_fasta           | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | fasta       | Reference genome used to perform the variant calling.                                                                                                                                                                                                        | [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz) |
+| ref_fasta_index     | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | fai         | Reference genome index used to perform the variant calling.                                                                                                                                                                                                  | Created from ref_fasta with samtools                                                                                  |
+| ref_dict            | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | dict        | Reference genome dictionary used to perform the variant calling.                                                                                                                                                                                             | Created from ref_fasta with samtools                                                                                  |
+| db_snp_vcf          | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | vcf         | Database of SNPs used to perform the variant calling.                                                                                                                                                                                                        | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz)                       |
+| db_snp_vcf_index    | "salmon-star", "salmon-hisat", "hisat2", "star" | File          | tbi         | SNP database index.                                                                                                                                                                                                                                          | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi)                  |
+| known_vcfs          | "salmon-star", "salmon-hisat", "hisat2", "star" | Array[File]   | vcf         | Databases of INDELs used to perform the variant calling.                                                                                                                                                                                                     | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz)                       |
+| known_vcfs_indices  | "salmon-star", "salmon-hisat", "hisat2", "star" | Array[File]   | tbi         | INDEL databases indices.                                                                                                                                                                                                                                     | [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/00-common_all.vcf.gz.tbi)                  |
+| vep_cache_dir       | "salmon-star", "salmon-hisat", "hisat2", "star" | String        | -           | Path to the vep cache directory containing the variant annotations to be used. Should contain the SIFT and PolyPhen scores.                                                                                                                                  | [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/)                                          |
+| hisat2_index_path   | "salmon-hisat", "hisat2"                        | String        | -           | Path to the directory where the HISAT2 index is stored.                                                                                                                                                                                                      | Created from ref_fasta with HISAT2                                                                                    |
+| hisat2_index_prefix | "salmon-hisat", "hisat2"                        | String        | -           | HISAT2 index prefix.                                                                                                                                                                                                                                         | -                                                                                                                     |
+| star_index_path     | "salmon-star", "star"                           | String        | -           | Path to the directory where the STAR index is stored.                                                                                                                                                                                                        | Created from ref_fasta with STAR                                                                                      |
+| salmon_index_path   | "salmon", "salmon-star", "salmon-hisat2"        | String        | -           | Path to the directory where the Salmon index is stored.                                                                                                                                                                                                      | Created from ref_fasta with Salmon                                                                                    |
+| edger_script        | All                                             | File          | -           | Script executed in the EdgeR task.                                                                                                                                                                                                                           | Included in MIGNON                                                                                                    |
+| tximport_script     | "salmon", "salmon-star", "salmon-hisat2"        | File          | -           | Script executed in the TxImport task.                                                                                                                                                                                                                        | Included in MIGNON                                                                                                    |
+| hipathia_script     | All                                             | File          | -           | Script executed in the hiPathia task.                                                                                                                                                                                                                        | Included in MIGNON                                                                                                    |
+| ensemblTx_script    | "salmon", "salmon-star", "salmon-hisat2"        | File          | -           | Script executed in the ensembldb task. It transforms the provided GTF into a Tx2Gene file used by tximport.                                                                                                                                                  | Included in MIGNON                                                                                                    |
 
-
-### Description
-
-* **is_paired_end**: Are input reads paired-end?
-* **input_fastq_r1**: Array of paths indicating the location of the fastq files to be processed. If paired-end, the path to the (_1) files.
-* **input_fastq_r2**: If paired-end, the path to the (_2) files. The position of each element in the array should match its pair in the input_fastq_r1 variable.
-* **sample_id**: Array of sample identifiers. Those identifiers will be used across the different tasks to the pipeline to identify each input sample. The position of each element in the array should match its pair in the input_fastq_r1 variable.
-* **group**: Array of string indicating the group of samples for each read file. Those groups will be used to perform the differential expression and signaling analyses. The position of each element in the array should match its pair in the input_fastq_r1 variable.
-* **execution_mode**: String indicating the execution mode to be used.
-* **do_vc**: Perform the variant calling? Only in case users do not want to extract and use variants from RNA-Seq data.
-* **gtf_file**: Annotation file for the genome used at alignment and variant calling. It is also the input to create the transcript-to-gene file neccesary for the salmon quantifications.
-* **ref_fasta**: Reference genome used to perform the variant calling.
-* **ref_fasta_index**: Reference genome index used to perform the variant calling.
-* **ref_dict**: Reference genome dictionary used to perform the variant calling.
-* **db_snp_vcf**: Database of SNPs used to perform the variant calling.
-* **db_snp_vcf_index**: SNP database index.
-* **known_vcfs**: Databases of INDELs used to perform the variant calling.
-* **known_vcfs_indices**: INDEL databases indices.
-* **vep_cache_dir**: Path to the vep cache directory containing the variant annotations to be used. Should contain the SIFT and PolyPhen scores.
-* **hisat2_index_path**: Path to the directory where the HISAT2 index is stored. 
-* **hisat2_index_prefix**: HISAT2 index prefix.
-* **star_index_path**: Path to the directory where the STAR index is stored.
-* **salmon_index_path**: Path to the directory where the Salmon index is stored.
-* **edger_script**: Script executed in the EdgeR task.
-* **tximport_script**: Script executed in the TxImport task.
-* **hipathia_script**: Script executed in the hiPathia task.
-* **ensemblTx_script**: Script executed in the ensembldb task. It transforms the provided GTF into a Tx2Gene file used by tximport.
-
-## Execution parameters
+## Execution values
 
 The following list contains the input parameters that can be used to control the number of CPUs and memory assigned to the container and the process where the task is executed. We will only list parameters that **really have an impact on the task execution**, that is, those parameters that are actually passed not only to the runtime of the WDL task, but also to the command that runs the operation.
 
-### Table
+## Default values
 
-| Input                   | Variable type | Default value |
-|-------------------------|---------------|---------------|
-| fastp_cpu               | Int           | 4             |
-| fastp_mem               | String        | 16G           |
-| fastqc_cpu              | Int           | 2             |
-| fastqc_mem              | String        | 16G           |
-| hisat2_cpu              | Int           | 4             |
-| hisat2_mem              | String        | 16G           |
-| sam2bam_cpu             | Int           | 4             |
-| sam2bam_mem             | String        | 16G           |
-| star_cpu                | Int           | 4             |
-| star_mem                | String        | 32G           |
-| salmon_cpu              | Int           | 4             |
-| salmon_mem              | String        | 16G           |
-| featureCounts_cpu       | Int           | 4             |
-| featureCounts_mem       | String        | 16G           |
-| vep_cpu                 | Int           | 4             |
-| vep_mem                 | String        | 16G           |
-| haplotype_scatter_count | Int           | 1             |
 
 ### Description
 
