@@ -22,16 +22,16 @@ title: MIGNON
 * Is the expression of **gene X** altered in response to my stimulus?
 * How do the pathway level results change if I do not include the genomic information?
 
-## How can I use MIGNON?
+## Who can use MIGNON?
 
-MIGNON is freely available in the following repository under the MIT license:
+Everyone! MIGNON is freely available in the following repository under the MIT license:
 
 * [**Link to MIGNON repository**](https://github.com/babelomics/MIGNON/)
 
 To install and use MIGNON, please visit the [installation page](1_installation.md). In addition, if users want to provide feedback about the workflow, we encourage them to use the [issues](https://github.com/babelomics/MIGNON/issues) section in the GitHub repository.
 
 
-## How does it works?
+## How does it work?
 
 MIGNON initial steps are composed by state-of-the art methods to perform the quality control, alignment (or pseudo-alignment), quantification, gene expression normalization and variant calling and annotation. On the other hand, the end of the workflow is composed by several scripts that integrate transcriptomic and genomic information, and apply the [hipathia](http://hipathia.babelomics.org/) signal propagation algorithm to extract the signaling circuit activities. The following image summarizes all the steps that can be carried out during the execution of the pipeline:
 
