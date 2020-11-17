@@ -3,15 +3,13 @@ layout: default
 title: Output
 ---
 
-# Output
+# Signaling circuit activities 
 
-As described in the **tool manuscript**, the main output of the workflow consists on two files, which can be found in the **call-hipathia** task directory created by [cromwell](https://github.com/broadinstitute/cromwell).
+File: `path_values.tsv`
 
-## Circuit activity matrix 
+As described in the **tool manuscript**, the main output of the workflow consists of two tab separated tables that can be found in the `call-hipathia` directory created by cromwell when using the default parameters. The first one is a matrix that contains the signaling circuit activity estimations performed by [hipathia](http://hipathia.babelomics.org/) after applying the signaling propagation algorithm.
 
-**path_values.tsv**
-
-This matrix contain the results of the circuit activity estimation performed by hiPathia after applying the *in-silico knockdown* strategy and contain a value for each circuit (row) and sample (column).
+Here users can find an example of the structure of such files, where rows are signaling circuit (identified by the hipathia ID) and the columns correspond to samples:
 
 |               | ERR3481954 | ERR3481955 | ERR3481956 | ERR3481957 |
 |---------------|------------|------------|------------|------------|
@@ -25,61 +23,37 @@ This matrix contain the results of the circuit activity estimation performed by 
 | P-hsa03320-55 | 0.3917     | 0.3999     | 0.4006     | 0.4027     |
 | P-hsa03320-56 | 0.2252     | 0.2238     | 0.2306     | 0.2976     |
 
-## Differential signaling activity analysis
+# Differential signaling results
 
-This data frame contains the results of making all the possible pairwise comparisons between the circuit activity values of the sample groups specified by the **group** input. Those results are generated through the application of an iterative Wilcoxon Test. The group contrast is indicated in the "comparison" column.
+File: `differential_signaling.tsv`
 
-**differential_signaling.tsv**
+Using the signaling circuit activity matrix as input, MIGNON performs by default all the possible pairwise comparisons between the sample groups supplied by the user. This is done by applying a Wilcoxon signed-rank test, where the null hypothesis of symmetry is tested. **If this statistical approach is not suitable for your data because you have an very specific design (e.g. paired data or a low N per group), users can apply an alternative test using the signaling circuit activity matrix**. Please take into account that the purpose of MIGNON is to provide a consolidated framework to transform the raw reads into functionally relevant information, but that it can not consider all the possible experimental designs for the downstream statistical analysis. 
 
-| pathId         | UP.DOWN | statistic | p.value | FDRp.value | comparison        |
-|----------------|---------|-----------|---------|------------|-------------------|
-| P-hsa03320-37  | DOWN    | -1.5275   | 0.2000  | 0.7026     | 16_weeks-12_weeks |
-| P-hsa03320-61  | DOWN    | -0.2182   | 1.0000  | 1.0000     | 16_weeks-12_weeks |
-| P-hsa03320-46  | DOWN    | -1.9640   | 0.1000  | 0.6091     | 16_weeks-12_weeks |
-| P-hsa03320-57  | DOWN    | -1.9640   | 0.1000  | 0.6091     | 16_weeks-12_weeks |
-| P-hsa03320-64  | UP      | 1.0911    | 0.3537  | 0.8566     | 16_weeks-12_weeks |
-| P-hsa03320-47  | DOWN    | -1.0911   | 0.4000  | 0.8566     | 16_weeks-12_weeks |
-| P-hsa03320-65  | UP      | 0.2182    | 1.0000  | 1.0000     | 16_weeks-12_weeks |
-| P-hsa03320-55  | UP      | 0.6547    | 0.7000  | 0.9215     | 16_weeks-12_weeks |
-| P-hsa03320-56  | DOWN    | -1.0911   | 0.4000  | 0.8566     | 16_weeks-12_weeks |
-| …              | …       | …         | …       | …          | …                 |
-| P-hsa05321-94  | DOWN    | -1.3093   | 0.1967  | 0.5469     | 9_weeks-16_weeks  |
-| P-hsa05321-95  | UP      | 1.9640    | 0.1000  | 0.4000     | 9_weeks-16_weeks  |
-| P-hsa05321-122 | UP      | 1.9640    | 0.0765  | 0.4000     | 9_weeks-16_weeks  |
-| P-hsa05321-123 | UP      | 0.2182    | 1.0000  | 1.0000     | 9_weeks-16_weeks  |
-| P-hsa05321-55  | UP      | 1.9640    | 0.1000  | 0.4000     | 9_weeks-16_weeks  |
-| P-hsa05321-74  | UP      | 1.3093    | 0.1967  | 0.5469     | 9_weeks-16_weeks  |
-| P-hsa05321-81  | UP      | 1.3093    | 0.1967  | 0.5469     | 9_weeks-16_weeks  |
-| P-hsa05321-138 | DOWN    | -1.0911   | 0.3537  | 0.7966     | 9_weeks-16_weeks  |
-| P-hsa05321-75  | UP      | 1.9640    | 0.1000  | 0.4000     | 9_weeks-16_weeks  |
-| P-hsa05321-152 | UP      | 1.0911    | 0.4000  | 0.7966     | 9_weeks-16_weeks  |
+An example of the differential signaling results can be found in the following table:
 
-## Pathway viewer
+| comparison      | pathName                         | pathId        | UP.DOWN | statistic | p.value | FDRp.value |
+|-----------------|----------------------------------|---------------|---------|-----------|---------|------------|
+| Problem-Control | PPAR signaling pathway: HMGCS2   | P-hsa03320-37 | DOWN    | -1.2      | 0.01    | 0.03       |
+| Problem-Control | MAPK signaling pathway: ATF4     | P-hsa04010-61 | DOWN    | -1.8      | 0.03    | 0.06       |
+| Problem-Control | ErbB signaling pathway: EIF4EBP1 | P-hsa04012-22 | UP      | 1.7       | 0.6     | 1          |
+| Problem-Control | Ras signaling pathway: RALBP1*   | P-hsa04014-76 | UP      | 1.3       | 1       | 1          |
+| Problem-Control | cGMP-PKG signaling pathway: MYL9 | P-hsa04022-3  | DOWN    | -1.5      | 1       | 1          |
 
-The above results can be visualized using the [hiPathia package](https://bioconductor.org/packages/release/bioc/html/hipathia.html), by subsetting the table to the comparison of interest and using the `create_report()` function. 
+
+# Other outputs
+
+In addition to the main outputs, users can find additional results for all the intermediates steps carried out during MIGNON runs. In this sense, here you can find a list of other outputs that may be of interest:
+
+1. **Count matrix**: This tab separated table can be found in the `call-featureCounts` or in the `call-tximport` directories with the name `counts.tsv`. The directory will vary depending on the selected execution mode (please see [execution modes](2_input.md#execution-modes) for more information). It contains the raw values that are passed to edgeR to perform the normalization and differential expression analysis. It contains a value for all the genes in the annotation file. In this table, rows are genes and columns are samples. 
+
+2. **Normalized gene expression matrix**: This tab separated table can be found in the `call-edgeR` directory with the name `logCPMs.tsv`. It contains the normalized gene expression matrix that can be directly analyzed in downstream analyses. Take into account that genes with a number of counts lower than 15 (default) across are samples are removed. The minimum amount of counts to pass the filter can be modified using the `edger_min_counts` input. In this table, rows are genes and columns are samples. 
+
+3. **Knockdown matrix**: This table can be found in the `call-hipathia` directory with the name `ko_matrix.tsv`. It contains the knockdown matrix that is used to integrate the genomic and transcriptomic information. Similar to the gene expression matrix, each row is a gene and each column is a sample, and the value of each cell can be either **1** if no Loss of function mutation was detected for a given gene/sample pair, or the **koFactor** otherwise (which defaults to **0.01**).
+
+Apart from the outputs derived directly from MIGNON, some of the tools employed during the raw reads processing generate intermediate reports which can be explored in its corresponding call directories. We recommend to use the [MultiQC](https://multiqc.info/) tool to summarize all those intermediate outputs in a single html report.
+
+# Pathway viewer
+
+The differential signaling results can be visualized using the [hiPathia package](https://bioconductor.org/packages/release/bioc/html/hipathia.html), by subsetting the table to the comparison of interest and using the `create_report()` function in the R environment. 
 
 ![Viewer](https://github.com/babelomics/hipathia/blob/master/vignettes/pics/hipathia_report_1.png?raw=true)
-
-## Other outputs
-
-### Knockdown matrix
-
-**ko_matrix.tsv**
-
-This matrix contains the gene table that is used to perform the in-silico knockdown of genes that present a Loss of Function (LoF) variant and that therefore, can not propagate the signal across the circuits. 
-
-|                 | ERR2704712 | ERR2704713 | ERR2704714 | ERR2704715 |
-|-----------------|------------|------------|------------|------------|
-| ENSG00000128342 | 1          | 1          | 1          | 1          |
-| ENSG00000187860 | 0.01       | 1          | 1          | 1          |
-| ENSG00000100003 | 1          | 1          | 1          | 1          |
-| ENSG00000100012 | 1          | 1          | 1          | 1          |
-| ENSG00000181123 | 1          | 1          | 1          | 1          |
-| ENSG00000133488 | 1          | 1          | 0.01       | 1          |
-| ENSG00000128242 | 1          | 0.01       | 1          | 1          |
-| ENSG00000100029 | 1          | 1          | 1          | 1          |
-| ENSG00000185339 | 1          | 1          | 1          | 1          |
-
-### Inner tools outputs
-
-Apart from the outputs derived directly from the MIGNON strategy, some of the tools employed during the raw reads processing generate intermediate output reports which can be explored in its corresponding call directories. Additionally, we strongly recommend to use the [MultiQC](https://multiqc.info/) tool to summarize all those intermediate outputs in a single html report.
