@@ -7,12 +7,54 @@ title: Input
 
 ## JSON
 
-As explained by [the Workflow Description Language authors](https://github.com/openwdl/wdl/blob/master/versions/development/SPEC.md#specifying-workflow-inputs-in-json), cromwell uses a [JSON](https://www.json.org/) formatted file as the main input. This file contains all **absolute** paths to the files that will be used during the analysis. 
+As explained by [the Workflow Description Language (WDL) authors](https://github.com/openwdl/wdl/blob/master/versions/development/SPEC.md#specifying-workflow-inputs-in-json), cromwell uses a [JSON](https://www.json.org/) formatted file as main input. In MIGNON, this file contains **absolute** paths to the files that are used during the analysis, **decision variables** to control which workflow steps are carried out (e.g. wether to perform or not the variant calling) and **arguments** to control each task execution (e.g. the amount of threads to use for the alignment).
 
+As an example, here you can find the content of a MIGNON input JSON file:
 
+```
+{
+    "MIGNON.execution_mode": "hisat2",
+    "MIGNON.is_paired_end": true,
+    "MIGNON.do_vc": true,
+	"MIGNON.input_fastq_r1": [
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615222_1.fastq.gz",
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615223_1.fastq.gz",
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615224_1.fastq.gz",
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615225_1.fastq.gz"
+	],
+    "MIGNON.input_fastq_r2": [
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615222_2.fastq.gz",
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615223_2.fastq.gz",
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615224_2.fastq.gz",
+		"/home/user/Desktop/MIGNON/mignon_test_data/subset_fastq/SRR8615225_2.fastq.gz"
+	],
+    "MIGNON.sample_id": ["Control_1", "Control_2", "Problem_1", "Problem_2"],
+    "MIGNON.group": ["Control", "Control", "Problem", "Problem"],
+    "MIGNON.gtf_file": "/home/user/Desktop/MIGNON/mignon_test_data/Homo_sapiens.GRCh38.99.chr.gtf",
+    "MIGNON.hisat2_index_path": "/home/user/Desktop/MIGNON/mignon_test_data/hisat_index",
+    "MIGNON.hisat2_index_prefix": "genome",
+    "MIGNON.vep_cache_dir": "/home/user/Desktop/MIGNON/mignon_test_data/subset_vep_cache",
+    "MIGNON.ref_fasta": "/home/user/Desktop/MIGNON/mignon_test_data/subset_genome.fa",
+    "MIGNON.ref_fasta_index": "/home/user/Desktop/MIGNON/mignon_test_data/subset_genome.fa.fai",
+    "MIGNON.ref_dict": "/home/user/Desktop/MIGNON/mignon_test_data/subset_genome.dict",
+    "MIGNON.db_snp_vcf": "/home/user/Desktop/MIGNON/mignon_test_data/subset_variants.vcf.gz",
+    "MIGNON.db_snp_vcf_index": "/home/user/Desktop/MIGNON/mignon_test_data/subset_variants.vcf.gz.tbi",
+    "MIGNON.known_vcfs":["/home/user/Desktop/MIGNON/mignon_test_data/subset_variants.vcf.gz"],
+    "MIGNON.known_vcfs_indices": ["/home/user/Desktop/MIGNON/mignon_test_data/subset_variants.vcf.gz.tbi"],
+    "MIGNON.edger_script": "/home/user/Desktop/MIGNON/scripts/edgeR.r",
+    "MIGNON.hipathia_script": "/home/user/Desktop/MIGNON/scripts/hipathia.r"
 
+}
+```
 
-We have prepared a list of JSON files with the minimum required inputs for each execution mode. They can be found at the [input_templates](https://github.com/babelomics/MIGNON/tree/master/input_templates) folder. From a general perspective the MIGNON inputs can be divided into three categories: Required inputs, execution parameters and other inputs.
+## Cromwell conf file
+
+The configuration file tells cromwell how to handle and launch the jobs that make up the workflow. When executing a single job, it places the values from the WDL file in the appropiated position within the container engine command. For example, the `requested_memory` runtime input, which controls the memory that is allocated for the execution of the task, is passed to the `--memory` argument when using `docker run` with the `LocalWithDocker.conf` file. On the other hand, when executing the workflow on a HPC environment, as SLURM and Singularity are used to run the jobs with the `SlurmAndSingularity.conf` file, the `requested_memory` runime input is used in the submission of the job with `sbatch --mem`. In a nuthsell, 
+
+appropiated container software to run the  the  how the docker containers are run by placing the execution parameters in the appropiated
+
+You can find more information about the possible backends in the [cromwell documentation](https://cromwell.readthedocs.io/en/stable/Configuring/)
+
 
 ## Required inputs
 

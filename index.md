@@ -26,7 +26,7 @@ title: MIGNON
 
 Everyone! MIGNON is freely available in the following repository under the MIT license:
 
-* [**Link to MIGNON repository**](https://github.com/babelomics/MIGNON/)
+* [----> **Link to MIGNON repository** <----](https://github.com/babelomics/MIGNON/)
 
 To install and use MIGNON, please visit the [installation page](1_installation.md). In addition, if users want to provide feedback about the workflow, we encourage them to use the [issues](https://github.com/babelomics/MIGNON/issues) section in the GitHub repository.
 

@@ -73,7 +73,9 @@ Users can download the latest MIGNON code from our Github repository. Users with
 ```
 $ git clone https://github.com/babelomics/MIGNON.git
 ```
-On the other hand, if you are not using git, you can get a zipped version of the code on the following link.
+On the other hand, if you are not using git, you can get a zipped version of the code on the following link:
+
+* [----> **Link to the compressed version of MIGNON** <----](https://github.com/babelomics/MIGNON/archive/master.zip).
 
 # Run the workflow
 
@@ -87,7 +89,6 @@ $ bash runMignonExample.sh
 This script will:
 
 1. Download all the required data to perform the dry run into the mignon_test_data folder. These data includes:
-
    * A reduced version of the human reference genome, transcriptome and annotations obtained from [ENSEMBL](https://www.ensembl.org/Homo_sapiens/Info/Index).
    * A subset of the Variant Effect Predictor cache file obtained from [ENSEMBL](ftp://ftp.ensembl.org/pub/release-99/variation/indexed_vep_cache/).
    * A reduced version of the dbSNP database in VCF format obtained from the [NCBI](https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b150_GRCh38p7/VCF/All_20170710.vcf.gz).
