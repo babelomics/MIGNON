@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Advanced | MIGNON</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Advanced" />
+<meta name="author" content="Martin Garrido Rodriguez-Cordoba" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Bioinformatic workflow for the mechanistic integrative analysis of RNA-Seq data" />
+<meta property="og:description" content="Bioinformatic workflow for the mechanistic integrative analysis of RNA-Seq data" />
+<link rel="canonical" href="http://localhost:4000/4_advanced.html" />
+<meta property="og:url" content="http://localhost:4000/4_advanced.html" />
+<meta property="og:site_name" content="MIGNON" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"Advanced","url":"http://localhost:4000/4_advanced.html","author":{"@type":"Person","name":"Martin Garrido Rodriguez-Cordoba"},"description":"Bioinformatic workflow for the mechanistic integrative analysis of RNA-Seq data","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="MIGNON" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">MIGNON</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/1_installation.html">Installation</a><a class="page-link" href="/2_input.html">Input</a><a class="page-link" href="/3_output.html">Output</a><a class="page-link" href="/4_advanced.html">Advanced</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <h1 id="parallelization">Parallelization</h1>
+
+<p>MIGNON does not implement an engine to parallelize the tasks. Instead, it relies on the intrinsic ability of each tool to use multi-threading and in the ability of <a href="https://github.com/broadinstitute/cromwell">cromwell</a> to launch a number of parallel jobs through the <strong>concurrent-job-limit</strong> parameter of the <a href="https://github.com/babelomics/MIGNON/tree/master/configs">config file</a>. We encourage users to read <a href="Parallelism-Multithreading-Scatter-Gather">cromwell parallelism post</a>, as it depicts the levels at which the execution of a workflow can be done in parallel. Overall, there are two levels at which MIGNON allows the use of parallel executions:</p>
+
+<h2 id="parallel-jobs">Parallel jobs</h2>
+
+<h3 id="sample-level">Sample-level</h3>
+
+<p>This is, the number of parallel tasks that can be executed using the task dependency tree created by cromwell. For example, the <strong>fastp</strong> processing of each sample is a task that can be easily executed in parallel. Multiple samples can be processed at the same time as they do not depend on each other’s outputs. On the other hand, tasks as <strong>featureCounts</strong> require a bunch of outputs and will not start until all the alignments finish successfully. This parallelization at sample level, when allowed, is controlled through the <strong>concurrent-job-limit</strong> parameter in the cromwell configuration file. As calculating the number of concurrent jobs is not a straightforward task, and will depend entirely on the workflow structure, <strong>we recommend to limit this parallelization level to one when deploying the workflow in machine with limited computational resources</strong> (i.e 32 Gb of memory). On the other hand, if using HPC or Cloud Computing, this level allows to significantly reduce the workflow execution time.</p>
+
+<h3 id="scatter-gather-strategy-for-haplotypecaller">Scatter-gather strategy for HaplotypeCaller</h3>
+
+<p>As explained in the <strong>input</strong> section, there is an input parameter (<strong>haplotype_scatter_count</strong>) that allows using the <a href="https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather">scatter and gather strategy</a> for the <strong>GATK HaplotypeCaller</strong> sub-task. This parameter can be used to speed up the variant calling process and will split the single-sample variant calling into a number of parallel processes. As the variant calling is carried out at sample-level, if this parameter is set to 5, MIGNON will create 5 sub-tasks for each sample that will considerably speed up the HaplotypeCaller execution time.</p>
+
+<h2 id="multi-thread-tools">Multi-thread tools</h2>
+
+<p>For those tools that allow multi-threading, we have included workflow-level inputs that are directly passed to the tool parameter that control such multi-threading. Additionally, for those tasks, we have performed a study of the performance of the tools under 6 different CPU configurations, which are depicted in the <strong>workflow manuscript</strong>. In brief, tools that allow multi-threading considerably speed up in correlation with the the number of CPUs. However, in our opinion, from 8 cpus up, the reduction on execution time is not worth for the number of CPUs used.</p>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">MIGNON</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Martin Garrido Rodriguez-Cordoba</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/babelomics"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">babelomics</span></a></li><li><a href="https://www.twitter.com/ClinicalBioinfo"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">ClinicalBioinfo</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Bioinformatic workflow for the mechanistic integrative analysis of RNA-Seq data</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
