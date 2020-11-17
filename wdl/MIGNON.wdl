@@ -7,9 +7,7 @@ workflow MIGNON {
     # WORKFLOW VARIABLES #
     ######################
 
-    # required inputs
-    Array[File] input_fastq_r1
-    Array[File] input_fastq_r2
+    # Required values
     Array[String] sample_id
     Array[String] group
     Boolean is_paired_end
@@ -17,10 +15,10 @@ workflow MIGNON {
     Boolean filter_unmapped = true
     String execution_mode
     Boolean do_vc
-    File gtf_file
+    Array[File] input_fastq_r1
+    Array[File] input_fastq_r2
     String? hisat2_index_path
     String? hisat2_index_prefix
-    String? hisat2_sample_id
     String? star_index_path
     String? salmon_index_path
     File? edger_script
@@ -35,40 +33,32 @@ workflow MIGNON {
     File? db_snp_vcf_index
     Array[File?] known_vcfs 
     Array[File?] known_vcfs_indices 
+    File gtf_file
 
-    # execution inputs
+    # execution values
     Int? fastp_cpu = 1
     String? fastp_mem = "16G"
+    String? fastp_additional_parameters = ""
     Int? fastqc_cpu = 1
     String? fastqc_mem = "16G"
+    String? fastqc_additional_parameters = ""
     Int? hisat2_cpu = 1
     String? hisat2_mem = "16G"
+    String? hisat2_additional_parameters = ""
     Int? sam2bam_cpu = 1
     String? sam2bam_mem = "16G"
+    String? sam2bam_additional_parameters = ""
     Int? star_cpu = 1
     String? star_mem = "32G"
+    String? star_additional_parameters = ""
     Int? salmon_cpu = 1
     String?  salmon_mem = "16G"
+    String? salmon_additional_parameters = ""
     Int? featureCounts_cpu = 1
     String? featureCounts_mem = "16G"
+    String? featureCounts_additional_parameters = ""
     Int? vep_cpu = 1
     String? vep_mem = "16G"
-    Int? filterBam_cpu = 1
-    String? filterBam_mem = "16G"
-
-    # number of parallel threads during variant calling
-    Int? haplotype_scatter_count = 1
-
-    # other inputs 
-    String? salmon_library_type = "A"
-    File? tx2gene_file    
-    Int? edger_min_counts = 15  
-    Boolean? hipathia_normalize = true
-    Float? hipathia_ko_factor = 0.01    
-    Float vep_sift_cutoff = 0.05
-    Float vep_polyphen_cutoff = 0.95    
-
-    # required defaults
     Int? ensemblTx_cpu = 1
     String? ensemblTx_mem = "16G"
     Int? edger_cpu = 1
@@ -77,6 +67,23 @@ workflow MIGNON {
     String? tximport_mem = "16G"
     Int? hipathia_cpu = 1
     String? hipathia_mem = "16G"
+    Int? filterBam_cpu = 1
+    String? filterBam_mem = "16G"
+    String? filterBam_additional_parameters = ""
+
+    # number of parallel tasks during variant calling
+    Int? haplotype_scatter_count = 1
+
+    # normalization and values
+    Int? edger_min_counts = 15  
+    Boolean? hipathia_normalize = true    
+    Float? hipathia_ko_factor = 0.01    
+    Float vep_sift_cutoff = 0.05
+    Float vep_polyphen_cutoff = 0.95    
+
+    # other values
+    String? salmon_library_type = "A"
+    File? tx2gene_file    
     String? rg_platform = "Unknown"
     String? rg_center = "Unknown"
     Int? min_confidence_for_variant_calling 
@@ -85,14 +92,6 @@ workflow MIGNON {
     File? input_bai
 
     # additional execution parameters
-    String? fastp_additional_parameters = ""
-    String? fastqc_additional_parameters = ""
-    String? hisat2_additional_parameters = ""
-    String? sam2bam_additional_parameters = ""
-    String? star_additional_parameters = ""
-    String? salmon_additional_parameters = ""
-    String? featureCounts_additional_parameters = ""
-    String? filterBam_additional_parameters = ""
 
     ###############
     # TASK CALLER #
@@ -329,7 +328,7 @@ workflow MIGNON {
 
             input:
                 tx2gene = tx2gene,
-                output_counts = "salmon_counts.tsv",
+                output_counts = "counts.tsv",
                 quant_files = salmon.quant,
                 quant_tool = "salmon",
                 sample_ids = sample_id,
