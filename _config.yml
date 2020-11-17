@@ -6,3 +6,11 @@ description: Bioinformatic workflow for the mechanistic integrative analysis of 
  
 theme: minima
 
+header_pages:
+  - 1_installation.md
+  - 2_input.md
+  - 3_output.md
+  - 4_advanced.md
+
+github_username: martingarridorc
+twitter_username: martingarridorc

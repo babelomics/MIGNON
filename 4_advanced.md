@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Execution modes
+title: Advanced
 ---
 
 # Execution modes
