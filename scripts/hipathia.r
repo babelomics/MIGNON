@@ -134,10 +134,8 @@ names(dsList) <- paste0(combinations[2,], "-", combinations[1,])
 
 # bind rows to get individual Df
 df <- Reduce(rbind, dsList)
-df$comparison <- rep(names(dsList), unlist(lapply(dsList, nrow)))
-
-# add path names to differential signaling output
-df <- cbind("path_name" = hipathia::get_path_names(metaginfo = pathways, names = as.character(df$pathId)), df)
+df <- cbind("pathName" = hipathia::get_path_names(metaginfo = pathways, names = as.character(df$pathId)), df)
+df <- cbind("comparison" = rep(names(dsList), unlist(lapply(dsList, nrow))), df)
 
 #### OUTPUT ####
 

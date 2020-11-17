@@ -74,17 +74,16 @@ workflow MIGNON {
     # number of parallel tasks during variant calling
     Int? haplotype_scatter_count = 1
 
-    # default values
-    String? salmon_library_type = "A"
-    File? tx2gene_file    
+    # normalization and values
     Int? edger_min_counts = 15  
-    Boolean? hipathia_normalize = true
+    Boolean? hipathia_normalize = true    
     Float? hipathia_ko_factor = 0.01    
     Float vep_sift_cutoff = 0.05
     Float vep_polyphen_cutoff = 0.95    
 
-    # required defaults
-    
+    # other values
+    String? salmon_library_type = "A"
+    File? tx2gene_file    
     String? rg_platform = "Unknown"
     String? rg_center = "Unknown"
     Int? min_confidence_for_variant_calling 
@@ -329,7 +328,7 @@ workflow MIGNON {
 
             input:
                 tx2gene = tx2gene,
-                output_counts = "salmon_counts.tsv",
+                output_counts = "counts.tsv",
                 quant_files = salmon.quant,
                 quant_tool = "salmon",
                 sample_ids = sample_id,
