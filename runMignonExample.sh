@@ -24,7 +24,7 @@ java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_d
 
 
 # if everything worked as expected, then move all the execution material to dry run and print success message
-if [[ ! $? -eq 0 ]]; then
+if [[ $? -eq 0 ]]; then
     mkdir -p dry_run;
     mv -f test_hisat2_vc.json test_star.json test_salmon.json cromwell-executions cromwell-workflow-logs dry_run;
     echo "MIGNON: Success!! Dry run completed. You are ready to execute MIGNON.";
