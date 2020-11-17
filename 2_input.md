@@ -83,11 +83,11 @@ In addition, the following figure shows which steps of the workflow are carried 
 
 # Preparing the JSON
 
-As explained before, the JSON file is used to store and register the file paths, workflow variables and execution parameters. For MIGNON, the values that should be included in this file can be divided in two different types: [Required values](#required-values), [default values](#default-values).
+As explained before, the JSON file is used to store and register the file paths, workflow variables and execution parameters. For MIGNON, the values that should be included in this file can be divided in two different categories: [Required values](#required-values) and [default values](#default-values).
 
 ## Required values
 
-The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling. The following table contains the basic information about each value, the execution modes where it is required and its description. The "preferred source" column details the source for the reference material that was used for running the workflow.
+The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling as for example the aligner (HISAT2/STAR) indexes or the reference genome. The following table contains the basic information about each value, the execution modes where it is required and its description. The "preferred source" column details the source for the reference material that was used for running the workflow.
 
 | Input               | Required at                                     | Variable type | File format | Description                                                                                                                                                                                                                                                  | Preferred source                                                                                                      |
 |---------------------|-------------------------------------------------|---------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -116,51 +116,97 @@ The values detailed in this section are mandatory and will vary depending on the
 | hipathia_script     | All                                             | File          | -           | Script executed in the hiPathia task.                                                                                                                                                                                                                        | Included in MIGNON                                                                                                    |
 | ensemblTx_script    | "salmon", "salmon-star", "salmon-hisat2"        | File          | -           | Script executed in the ensembldb task. It transforms the provided GTF into a Tx2Gene file used by tximport.                                                                                                                                                  | Included in MIGNON                                                                                                    |
 
-## Execution values
-
-The following list contains the input parameters that can be used to control the number of CPUs and memory assigned to the container and the process where the task is executed. We will only list parameters that **really have an impact on the task execution**, that is, those parameters that are actually passed not only to the runtime of the WDL task, but also to the command that runs the operation.
-
 ## Default values
 
+Some inputs have a default value that can be (or not) modified by users. This section comprises different type of inputs, from those able to modify the threads and memory used by the different softwares that make up the pipeline, to default values that are used in the multi-omic integrative.
 
-### Description
+### Execution values
 
-For all the above inputs, the **cpu** and **mem** parameters are directly passed to the container that executes each task. On the other hand, the **cpu** parameter is also passed to the argument that control the multi-threading on each tool. Before modifying any of this parameters, please check the parallelization section.
+As mentioned, some of the default values have the ability to modify the computational resources that every software uses to carry out a particular task within the workflow. In this group we have mainly three types of values: **cpu**, **mem** and **additional_parameters**. The **cpu** value is placed in the proper position on each command of the workflow, to modify, when possible, the number of threads used by the tool that is used in the task. **mem** indicates the amount of memory that is allocated to the execution of this task. Finally, **additional_parameters** allow users to include additional options for the execution of some tools within the workflow. All the execution inputs are defined with the same structure:
 
-The **haplotype_scatter_count** input requires a special mention. As explained in the parallelization section, this parameter allows to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divide to perform the variant calling from aligned reads.
+*nameOfTheTask*_*value*
 
-## Other inputs
+And can be found in the following list.
 
-In this section, users can find inputs which are not required or used to control the workflow execution, but that can notably affect the final circuit signaling activity values.
+```
+Int? fastp_cpu = 1
+String? fastp_mem = "16G"
+String? fastp_additional_parameters = ""
+Int? fastqc_cpu = 1
+String? fastqc_mem = "16G"
+String? fastqc_additional_parameters = ""
+Int? hisat2_cpu = 1
+String? hisat2_mem = "16G"
+String? hisat2_additional_parameters = ""
+Int? sam2bam_cpu = 1
+String? sam2bam_mem = "16G"
+String? sam2bam_additional_parameters = ""
+Int? star_cpu = 1
+String? star_mem = "32G"
+String? star_additional_parameters = ""
+Int? salmon_cpu = 1
+String?  salmon_mem = "16G"
+String? salmon_additional_parameters = ""
+Int? featureCounts_cpu = 1
+String? featureCounts_mem = "16G"
+String? featureCounts_additional_parameters = ""
+Int? vep_cpu = 1
+String? vep_mem = "16G"
+Int? ensemblTx_cpu = 1
+String? ensemblTx_mem = "16G"
+Int? edger_cpu = 1
+String? edger_mem = "16G"
+Int? tximport_cpu = 1
+String? tximport_mem = "16G"
+Int? hipathia_cpu = 1
+String? hipathia_mem = "16G"
+Int? filterBam_cpu = 1
+String? filterBam_mem = "16G"
+String? filterBam_additional_parameters = ""
+```
 
-### Table
+As an example, to modify the execution of STAR, users can indicate threads, memory and include additional arguments by including the following lines in the input JSON.
 
-| Input                 | Variable type | Default value |
-|-----------------------|---------------|---------------|
-| fastp_windows_size    | Int           | 4             |
-| fastp_mean_quality    | Int           | 15            |
-| fastp_required_length | Int           | 20            |
-| salmon_library_type   | String        | A             |
-| tx2gene_file          | File          | -             |
-| edger_min_counts      | Int           | 15            |
-| hipathia_normalize    | Boolean       | "true"        |
-| hipathia_ko_factor    | Float         | 0.01          |
-| vep_sift_cutoff       | Float         | 0.05          |
-| vep_polyphen_cutoff   | Float         | 0.95          |
+```
+"MIGNON.star_cpu": 4,
+"MIGNON.star_mem": "64G",
+"MIGNON.star_additional_parameters": "--limitBAMsortRAM 60359738368 --runRNGseed 333"
+```
 
-### Description
+In addition to these, the **haplotype_scatter_count** value requires a special mention. As explained in the advanced section, this parameter allows users to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divide to perform the variant calling from aligned reads.
 
-* **fastp_windows_size**: Sliding windows size used by fastp to evaluate the quality of the sequences.
-* **fastp_mean_quality**: Required mean quality for a sequence to pass the fastp filter.
-* **fastp_required_length**: Reads shorter than this parameter will be discarded.
-* **salmon_library_type**: Library type for salmon quantification. Defaults to "A" (automatic detection).
-* **tx2gene_file**: Transcript to gene table. This parameter can be used to avoid the GTF to Tx2Gene task (ensembldb). This file must contain a two columns table indicating the mapping between the regions quantified by salmon and the features that will be used to perform the subsequent analyses (genes). This is specially important if using a GTF file that does not come from from ENSEMBL.
-* **edger_min_counts**: Minimum counts per gene. This parameter will be used to filter the count matrix before the differential expression analysis. By default, all those genes with less than 15 counts across all samples will be filtered.
-* **hipathia_normalize**: Normalize circuit pathway activity by length? HiPathia applies a signal propagation algorithm across the different receptor-effector circuits in the pathways to calculate the signaling circuit activity. The topology and diameter of such circuits influence the resulting circuit activity values, so this normalization is recommended.
-* **hipathia_ko_factor**: LoF variants knockdown factor. This parameter control the number by which the normalized expression values are multiplied when a loss of function (LoF) variant is detected for a gene/sample.
-* **vep_sift_cutoff**: Sift cutoff value. In combination with **vep_polyphen_cutoff**, it is used to filter variants that will be considered as deleterious (LoF).
-* **vep_polyphen_cutoff**: Polyphen cutoff value. In combination with **vep_sift_cutoff**, it is used to filter variants that will be considered as deleterious (LoF).
+### Other values
 
-## Defaults
+Finally, there are some default values that are used to filter annotated variants and to perform the *in silico* knockdown of genes that are affected by those. Additionally, there are additional defaults that are required to perform some of the tasks but that do not have an impact in the output. All of them can be found in the following section.
 
-Apart from the inputs above described, there are other inputs which are required for the workflow to be executed. Those are set as defaults, and can be changed directly in the [MIGNON wdl code](https://github.com/babelomics/MIGNON/blob/master/wdl/MIGNON.wdl) and the [MIGNON variant calling sub-workflow](https://github.com/babelomics/MIGNON/blob/master/wdl/MIGNON_calling.wdl).
+```
+# normalization and values
+String? salmon_library_type = "A"
+Int? edger_min_counts = 15  
+Boolean? hipathia_normalize = true    
+Float? hipathia_ko_factor = 0.01    
+Float vep_sift_cutoff = 0.05
+Float vep_polyphen_cutoff = 0.95    
+
+# other values
+File? tx2gene_file    
+String? rg_platform = "Unknown"
+String? rg_center = "Unknown"
+Int? min_confidence_for_variant_calling 
+File? ref_gz_index
+File? intervals
+File? input_bai
+```
+
+Those that actually have an impact on the output of the pipeline are detailed in the following table:
+
+| Input               | Variable type | Default value | Description                                                                                                                                                                                                                                                                                                                                  |
+|---------------------|---------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| salmon_library_type | String        | A             | Library type for salmon quantification. Defaults to "A" (automatic detection).                                                                                                                                                                                                                                                               |
+| edger_min_counts    | Int           |            15 | Minimum counts per gene. This parameter will be used to filter the count matrix before the differential expression analysis. By default, all those genes with less than 15 counts across all samples will be filtered.                                                                                                                       |
+| hipathia_normalize  | Boolean       | "true"        | Normalize circuit pathway activity by length? HiPathia applies a signal propagation algorithm across the different receptor-effector circuits in the pathways to calculate the signaling circuit activity. The topology and diameter of such circuits influence the resulting circuit activity values, so this normalization is recommended. |
+| hipathia_ko_factor  | Float         | 0.01          | LoF variants knockdown factor. This parameter control the number by which the normalized expression values are multiplied when a loss of function (LoF) variant is detected for a gene/sample.                                                                                                                                               |
+| vep_sift_cutoff     | Float         | 0.05          | Sift cutoff value. In combination with **vep_polyphen_cutoff**, it is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
+| vep_polyphen_cutoff | Float         | 0.95          | Polyphen cutoff value. In combination with **vep_sift_cutoff**, it is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
+
+For more information about the integrative strategy that is performed in MIGNON, please read the article that accompanies this software.
