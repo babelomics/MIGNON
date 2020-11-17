@@ -7,9 +7,7 @@ workflow MIGNON {
     # WORKFLOW VARIABLES #
     ######################
 
-    # required inputs
-    Array[File] input_fastq_r1
-    Array[File] input_fastq_r2
+    ## Required values
     Array[String] sample_id
     Array[String] group
     Boolean is_paired_end
@@ -17,10 +15,12 @@ workflow MIGNON {
     Boolean filter_unmapped = true
     String execution_mode
     Boolean do_vc
-    File gtf_file
+
+    # input files
+    Array[File] input_fastq_r1
+    Array[File] input_fastq_r2
     String? hisat2_index_path
     String? hisat2_index_prefix
-    String? hisat2_sample_id
     String? star_index_path
     String? salmon_index_path
     File? edger_script
@@ -35,6 +35,7 @@ workflow MIGNON {
     File? db_snp_vcf_index
     Array[File?] known_vcfs 
     Array[File?] known_vcfs_indices 
+    File gtf_file
 
     # execution inputs
     Int? fastp_cpu = 1
@@ -56,7 +57,16 @@ workflow MIGNON {
     Int? filterBam_cpu = 1
     String? filterBam_mem = "16G"
 
-    # number of parallel threads during variant calling
+    String? fastp_additional_parameters = ""
+    String? fastqc_additional_parameters = ""
+    String? hisat2_additional_parameters = ""
+    String? sam2bam_additional_parameters = ""
+    String? star_additional_parameters = ""
+    String? salmon_additional_parameters = ""
+    String? featureCounts_additional_parameters = ""
+    String? filterBam_additional_parameters = ""
+
+    # number of parallel tasks during variant calling
     Int? haplotype_scatter_count = 1
 
     # other inputs 
@@ -85,14 +95,6 @@ workflow MIGNON {
     File? input_bai
 
     # additional execution parameters
-    String? fastp_additional_parameters = ""
-    String? fastqc_additional_parameters = ""
-    String? hisat2_additional_parameters = ""
-    String? sam2bam_additional_parameters = ""
-    String? star_additional_parameters = ""
-    String? salmon_additional_parameters = ""
-    String? featureCounts_additional_parameters = ""
-    String? filterBam_additional_parameters = ""
 
     ###############
     # TASK CALLER #
