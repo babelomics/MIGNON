@@ -1,4 +1,4 @@
-# MIGNON  <img src="img/icon.png" align="right" height="200" />
+[![MIGNON](img/MIGNON_logo_horizontal.svg)](https://babelomics.github.io/MIGNON/)
 
 [![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
 

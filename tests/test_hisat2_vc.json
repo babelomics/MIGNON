@@ -14,8 +14,18 @@
 		"flagForPwd/mignon_test_data/subset_fastq/SRR8615224_2.fastq.gz",
 		"flagForPwd/mignon_test_data/subset_fastq/SRR8615225_2.fastq.gz"
 	],
-    "MIGNON.sample_id": ["Control_1", "Control_2", "Problem_1", "Problem_2"],
-    "MIGNON.group": ["Control", "Control", "Problem", "Problem"],
+    "MIGNON.sample_id": [
+        "Control_1",
+        "Control_2",
+        "Problem_1",
+        "Problem_2"
+    ],
+    "MIGNON.group": [
+        "Control",
+        "Control",
+        "Problem",
+        "Problem"
+    ],
     "MIGNON.gtf_file": "flagForPwd/mignon_test_data/Homo_sapiens.GRCh38.99.chr.gtf",
     "MIGNON.hisat2_index_path": "flagForPwd/mignon_test_data/hisat_index",
     "MIGNON.hisat2_index_prefix": "genome",

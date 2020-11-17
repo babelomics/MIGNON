@@ -122,17 +122,20 @@ combinations <- combn( levels(sampleInfo$group) , 2)
 dsList <- apply(combinations, 2, function(x) {
   
   compTable <- do_wilcoxon(data = pathValues, group = sampleInfo$group, g1 = x[2], g2 = x[1])
-  compTable <- data.frame(pathId = rownames(compTable), compTable)
+  compTable <- data.frame(pathId = rownames(compTable), compTable, stringsAsFactors = FALSE)
   return(compTable)
   
 })
+
+message("Preparing output...")
 
 # set list names
 names(dsList) <- paste0(combinations[2,], "-", combinations[1,])
 
 # bind rows to get individual Df
 df <- Reduce(rbind, dsList)
-df$comparison <- rep(names(dsList), unlist(lapply(dsList, nrow)))
+df <- cbind("pathName" = hipathia::get_path_names(metaginfo = pathways, names = as.character(df$pathId)), df)
+df <- cbind("comparison" = rep(names(dsList), unlist(lapply(dsList, nrow))), df)
 
 #### OUTPUT ####
 
@@ -143,5 +146,6 @@ write.table(x = pathValues, file = "path_values.tsv", sep = "\t", row.names = TR
 write.table(x = df, file = "differential_signaling.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
 write.table(x = normMatrix, file = "scaled_matrix.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
 if(doVc) write.table(x = koMatrix, file = "ko_matrix.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
+saveRDS(pathways, "hipathia_metaginfo.rds")
 
 message("Done!")
