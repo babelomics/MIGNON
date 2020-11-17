@@ -7,7 +7,7 @@ workflow MIGNON {
     # WORKFLOW VARIABLES #
     ######################
 
-    ## Required values
+    # Required values
     Array[String] sample_id
     Array[String] group
     Boolean is_paired_end
@@ -15,8 +15,6 @@ workflow MIGNON {
     Boolean filter_unmapped = true
     String execution_mode
     Boolean do_vc
-
-    # input files
     Array[File] input_fastq_r1
     Array[File] input_fastq_r2
     String? hisat2_index_path
@@ -37,39 +35,46 @@ workflow MIGNON {
     Array[File?] known_vcfs_indices 
     File gtf_file
 
-    # execution inputs
+    # execution values
     Int? fastp_cpu = 1
     String? fastp_mem = "16G"
+    String? fastp_additional_parameters = ""
     Int? fastqc_cpu = 1
     String? fastqc_mem = "16G"
+    String? fastqc_additional_parameters = ""
     Int? hisat2_cpu = 1
     String? hisat2_mem = "16G"
+    String? hisat2_additional_parameters = ""
     Int? sam2bam_cpu = 1
     String? sam2bam_mem = "16G"
+    String? sam2bam_additional_parameters = ""
     Int? star_cpu = 1
     String? star_mem = "32G"
+    String? star_additional_parameters = ""
     Int? salmon_cpu = 1
     String?  salmon_mem = "16G"
+    String? salmon_additional_parameters = ""
     Int? featureCounts_cpu = 1
     String? featureCounts_mem = "16G"
+    String? featureCounts_additional_parameters = ""
     Int? vep_cpu = 1
     String? vep_mem = "16G"
+    Int? ensemblTx_cpu = 1
+    String? ensemblTx_mem = "16G"
+    Int? edger_cpu = 1
+    String? edger_mem = "16G"
+    Int? tximport_cpu = 1
+    String? tximport_mem = "16G"
+    Int? hipathia_cpu = 1
+    String? hipathia_mem = "16G"
     Int? filterBam_cpu = 1
     String? filterBam_mem = "16G"
-
-    String? fastp_additional_parameters = ""
-    String? fastqc_additional_parameters = ""
-    String? hisat2_additional_parameters = ""
-    String? sam2bam_additional_parameters = ""
-    String? star_additional_parameters = ""
-    String? salmon_additional_parameters = ""
-    String? featureCounts_additional_parameters = ""
     String? filterBam_additional_parameters = ""
 
     # number of parallel tasks during variant calling
     Int? haplotype_scatter_count = 1
 
-    # other inputs 
+    # default values
     String? salmon_library_type = "A"
     File? tx2gene_file    
     Int? edger_min_counts = 15  
@@ -79,14 +84,7 @@ workflow MIGNON {
     Float vep_polyphen_cutoff = 0.95    
 
     # required defaults
-    Int? ensemblTx_cpu = 1
-    String? ensemblTx_mem = "16G"
-    Int? edger_cpu = 1
-    String? edger_mem = "16G"
-    Int? tximport_cpu = 1
-    String? tximport_mem = "16G"
-    Int? hipathia_cpu = 1
-    String? hipathia_mem = "16G"
+    
     String? rg_platform = "Unknown"
     String? rg_center = "Unknown"
     Int? min_confidence_for_variant_calling 

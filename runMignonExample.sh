@@ -20,9 +20,6 @@ java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_d
 java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON.wdl -i test_salmon.json
 java -Dconfig.file=${PWD}/configs/LocalWithDocker.conf -jar ${PWD}/mignon_test_data/cromwell-47.jar run wdl/MIGNON_htseq.wdl -i test_star.json
 
-# create and move all the outputs to the new directory
-
-
 # if everything worked as expected, then move all the execution material to dry run and print success message
 if [[ $? -eq 0 ]]; then
     mkdir -p dry_run;
