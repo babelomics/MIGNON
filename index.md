@@ -33,7 +33,7 @@ To install and use MIGNON, please visit the [installation page](1_installation.m
 
 ## How does it work?
 
-MIGNON initial steps are composed by state-of-the art methods to perform the quality control, alignment (or pseudo-alignment), quantification, gene expression normalization and variant calling and annotation. On the other hand, the end of the workflow is composed by several scripts that integrate transcriptomic and genomic information, and apply the [hipathia](http://hipathia.babelomics.org/) signal propagation algorithm to extract the signaling circuit activities. The following image summarizes all the steps that can be carried out during the execution of the pipeline:
+MIGNON initial steps are composed by state-of-the art methods to perform the quality control, alignment (or pseudo-alignment), quantification, gene expression normalization and variant calling and annotation. On the other hand, the end of the workflow is composed by several scripts that integrate transcriptomic and genomic information, and apply the [hipathia](http://hipathia.babelomics.org/) signal propagation algorithm to extract the signaling circuit activities. The following figure summarizes all the steps that are carried out during the execution of the pipeline:
 
 ![MIGNON](img/MIGNON_workflow.svg)
 

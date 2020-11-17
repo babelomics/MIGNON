@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Installation
-logo: img/MIGNON_logo_horizontal.svg
 ---
 
 # Quick start
