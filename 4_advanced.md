@@ -12,7 +12,7 @@ title: Advanced
 Because of the underlying design of MIGNON, the different tools that make up the pipeline can be conceived as black boxes that receive an input and generate an output that is used as input for the next tool. As all the executions occur within docker containers, the tools can be easily replaced if the new tool input/output match the workflow schema. By making small changes to the MIGNON WDL code (in terms of lines of code), users can replace a particular tool with little effort. To demonstrate this, we created a new version of the workflow where we changed the 
 featureCounts tool for [HT-Seq](https://htseq.readthedocs.io/en/master/), which is an alternative tool to obtain the number of counts per gene used in the [Genomic Data Commons mRNA analysis pipeline](https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/Expression_mRNA_Pipeline/).
 
-The first step to include or substitute a tool is identifying the inputs and outputs that it requires and produces, respectively. In a very similar fashion to featureCounts, HT-Seq takes as input an alignment file (SAM or BAM) together with a genome annotation file (GTF) and outputs a tab-separated text file with the number of counts per gene in the GTF file. In this sense, we are going to replace featureCounts with a tool that performs the same task in the workflow. **However, unlike featureCounts, HT-Seq can not be applied to several samples at the same time**. This creates a conflict because in MIGNON, featureCounts has a double purpose: It counts the number of reads per feature and **summarizes the output of the alignments into a single output, taking as input the array of alignment files**. To address this problem, we will start creating two different WDL tasks to perform the same steps that are carried out on the featureCounts execution: One that will run HT-Seq in a single sample manner and other that will merge all the individual count tables. 
+The first step to include or substitute a tool is identifying the inputs and outputs that it requires and produces, respectively. In a very similar fashion to featureCounts, HT-Seq takes as input an alignment file (SAM or BAM) together with a genome annotation file (GTF) and outputs a tab-separated text file with the number of counts per gene in the GTF file. In this sense, we are going to replace featureCounts with a tool that performs the same task in the workflow. **However, unlike featureCounts, HT-Seq cannot be applied to several samples at the same time**. This creates a conflict because in MIGNON, featureCounts has a double purpose: it counts the number of reads per feature and **summarizes the output of the alignments into a single output, taking as input the array of alignment files**. To address this problem, we will start creating two different WDL tasks to perform the same steps that are carried out on the featureCounts execution: one that will run HT-Seq in a single sample manner and another one that will merge all the individual count tables. 
 
 ```
 # 1 - HTSEQ
@@ -71,7 +71,7 @@ task mergeCounts {
 }
 ```
 
-As it can be observed, the first task will use a container with the HT-Seq software: `docker: "quay.io/biocontainers/htseq:0.6.1.post1--py27h76bc9d7_5"`. The second one will use a container with the base R language to merge the different count tables `docker: "r-base:4.0.3"`. Once with the WDL tasks prepared, we can import them into the main workflow code by adding:
+As it can be observed, the first task will use a container with the HT-Seq software: `docker: "quay.io/biocontainers/htseq:0.6.1.post1--py27h76bc9d7_5"`. The second one will use a container with the base R language to merge the different count tables `docker: "r-base:4.0.3"`. Once the WDL tasks are prepared, we can import them into the main workflow code by adding:
 
 ```
 import "MIGNON_htseq_tasks.wdl" as MignonHtSeq
@@ -147,14 +147,14 @@ call Mignon.edgeR as edgeR {
 
 }
 ```
-And voilá! We have changed on of the core tool of MIGNON by other without altering the behavior of the pipeline. We have included this parallel workflow in the repo within the following files:
+And voilá! We have changed one of the core tool of MIGNON by other without altering the behavior of the pipeline. We have included this parallel workflow in the repo within the following files:
 
 Task file: [**MIGNON_htseq_tasks.wdl**](https://github.com/babelomics/MIGNON/blob/master/wdl/MIGNON_htseq_tasks.wdl)
 WDL file: [**MIGNON_htseq.wdl**](https://github.com/babelomics/MIGNON/blob/master/wdl/MIGNON_htseq.wdl)
 
 # Parallelization
 
-MIGNON  relies on the intrinsic ability of each tool to use multi-threading and in the ability of [cromwell](https://github.com/broadinstitute/cromwell) to launch a number of parallel jobs through the **concurrent-job-limit** parameter of the [config file](https://github.com/babelomics/MIGNON/tree/master/configs). We encourage users to read [cromwell multithreading post](Parallelism-Multithreading-Scatter-Gather), as it depicts the levels at which the execution of a workflow can be done in parallel. In a nuthsell, there are two levels at which MIGNON allows the use of parallel executions:
+MIGNON  relies on the intrinsic ability of each tool to use multi-threading and in the ability of [cromwell](https://github.com/broadinstitute/cromwell) to launch a number of parallel jobs through the **concurrent-job-limit** parameter of the [config file](https://github.com/babelomics/MIGNON/tree/master/configs). We encourage users to read [cromwell multithreading post](Parallelism-Multithreading-Scatter-Gather), as it depicts the levels at which the execution of a workflow can be done in parallel. In brief, there are two levels at which MIGNON allows the use of parallel executions:
 
 ## Parallel jobs
 
@@ -168,4 +168,4 @@ As explained in the **input** section, there is an input parameter (**haplotype_
 
 ## Multi-thread tools
 
-For those tools that allow multi-threading, we have included workflow-level inputs that are directly passed to the tool parameter that control such multi-threading. Additionally, for those tasks, we have performed a study of the performance of the tools under 6 different CPU configurations, which are depicted in the **workflow manuscript**. In brief, tools that allow multi-threading considerably speed up in correlation with the the number of CPUs. However, in our opinion, from 8 cpus up, the reduction on execution time is not worth for the number of CPUs used.
+For those tools that allow multi-threading, we have included workflow-level inputs that are directly passed to the tool parameter that control such multi-threading. Additionally, for those tasks, we have performed a study of the performance of the tools under 6 different CPU configurations, which are depicted in the **workflow manuscript**. In brief, tools that allow multi-threading considerably speed up in correlation with the the number of CPUs. However, in our opinion, from 8 CPUs up, the reduction on execution time is not worth for the number of CPUs used.

@@ -23,7 +23,7 @@ From a programmatic perspective, MIGNON is a chain of tasks written in the [Work
 
 ## [Java](https://www.java.com/es/download/)
 
-Java is used to execute the workflow management software that interprets and launch the different tasks within the pipeline. Once installed, users can check the version with `java -version`:
+Java is used to execute the workflow management software that interprets and launches the different tasks within the pipeline. Once installed, users can check the version with `java -version`:
 
 ```
 $ java -version
@@ -106,7 +106,7 @@ MIGNON: Success!! Dry run completed. You are ready to execute MIGNON.
 
 ## Regular run
 
-Although the dry run is very useful to test that all the MIGNON dependencies were installed successfully, users need to prepare their inputs to perform a regular run of the pipeline. To guide users through the different inputs required by MIGNON, we have prepared the [input section](2_input.md). Once with the input prepared in the JSON format, users can run the workflow by executing the following command in a terminal:
+Although the dry run is very useful to test that all the MIGNON dependencies were installed successfully, users need to prepare their inputs to perform a regular run of the pipeline. To guide users through the different inputs required by MIGNON, we have prepared the [input section](2_input.md). Once the input is prepared in the JSON format, users can run the workflow by executing the following command in a terminal:
 
 ```
 $ java -Dconfig.file=/path/to/config_file.conf -jar /path/to/cromwell.jar run /path/to/MIGNON.wdl -i /path/to/input.json

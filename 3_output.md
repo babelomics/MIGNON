@@ -23,11 +23,13 @@ Here users can find an example of the structure of such files, where rows are si
 | P-hsa03320-55 | 0.3917     | 0.3999     | 0.4006     | 0.4027     |
 | P-hsa03320-56 | 0.2252     | 0.2238     | 0.2306     | 0.2976     |
 
+Users can employ this matrix as a substitution of the gene expression matrix for downstream analyses as principal component analysis (PCA) or clustering. In addition, interactive tools such as [morpheus](https://software.broadinstitute.org/morpheus/) can help users without programming experience get rich visualizations using only a web browser.
+
 # Differential signaling results
 
 File: `differential_signaling.tsv`
 
-Using the signaling circuit activity matrix as input, MIGNON performs by default all the possible pairwise comparisons between the sample groups supplied by the user. This is done by applying a Wilcoxon signed-rank test, where the null hypothesis of symmetry is tested. **If this statistical approach is not suitable for your data because you have an very specific design (e.g. paired data or a low N per group), users can apply an alternative test using the signaling circuit activity matrix**. Please take into account that the purpose of MIGNON is to provide a consolidated framework to transform the raw reads into functionally relevant information, but that it can not consider all the possible experimental designs for the downstream statistical analysis. 
+Using the signaling circuit activity matrix as input, MIGNON performs by default all the possible pairwise comparisons between the sample groups supplied by the user. This is done by applying a Wilcoxon signed-rank test, where the null hypothesis of symmetry is tested. **If this statistical approach is not suitable for your data because you have a very specific design (e.g. paired data or a low N per group), users can apply an alternative tests using the signaling circuit activity matrix**. Please take into account that the purpose of MIGNON is to provide a consolidated framework to transform the raw reads into functionally relevant information, but that it cannot consider all the possible experimental designs for the downstream statistical analysis. 
 
 An example of the differential signaling results can be found in the following table:
 
@@ -42,13 +44,13 @@ An example of the differential signaling results can be found in the following t
 
 # Other outputs
 
-In addition to the main outputs, users can find additional results for all the intermediates steps carried out during MIGNON runs. In this sense, here you can find a list of other outputs that may be of interest:
+In addition to the main outputs, users can find additional results for all the intermediate steps carried out during MIGNON runs. In this sense, here you can find a list of other outputs that may be of interest:
 
 1. **Count matrix**: This tab separated table can be found in the `call-featureCounts` or in the `call-tximport` directories with the name `counts.tsv`. The directory will vary depending on the selected execution mode (please see [execution modes](2_input.md#execution-modes) for more information). It contains the raw values that are passed to edgeR to perform the normalization and differential expression analysis. It contains a value for all the genes in the annotation file. In this table, rows are genes and columns are samples. 
 
-2. **Normalized gene expression matrix**: This tab separated table can be found in the `call-edgeR` directory with the name `logCPMs.tsv`. It contains the normalized gene expression matrix that can be directly analyzed in downstream analyses. Take into account that genes with a number of counts lower than 15 (default) across are samples are removed. The minimum amount of counts to pass the filter can be modified using the `edger_min_counts` input. In this table, rows are genes and columns are samples. 
+2. **Normalized gene expression matrix**: This tab separated table can be found in the `call-edgeR` directory with the name `logCPMs.tsv`. It contains the normalized gene expression matrix that can be directly analyzed in downstream analyses. Take into account that genes with a number of counts lower than 15 (default) across samples are removed. The minimum amount of counts to pass the filter can be modified using the `edger_min_counts` input. In this table, rows are genes and columns are samples. 
 
-3. **Knockdown matrix**: This table can be found in the `call-hipathia` directory with the name `ko_matrix.tsv`. It contains the knockdown matrix that is used to integrate the genomic and transcriptomic information. Similar to the gene expression matrix, each row is a gene and each column is a sample, and the value of each cell can be either **1** if no Loss of function mutation was detected for a given gene/sample pair, or the **koFactor** otherwise (which defaults to **0.01**).
+3. **Knockdown matrix**: This table can be found in the `call-hipathia` directory with the name `ko_matrix.tsv`. It contains the knockdown matrix that is used to integrate the genomic and transcriptomic information. Similar to the gene expression matrix, each row is a gene and each column is a sample, and the value of each cell can be either **1** if no loss of function mutation was detected for a given gene/sample pair, or the **koFactor** otherwise (which defaults to **0.01**).
 
 Apart from the outputs derived directly from MIGNON, some of the tools employed during the raw reads processing generate intermediate reports which can be explored in its corresponding call directories. We recommend to use the [MultiQC](https://multiqc.info/) tool to summarize all those intermediate outputs in a single html report.
 

@@ -9,7 +9,7 @@ title: Input
 
 As explained by [the Workflow Description Language (WDL) authors](https://github.com/openwdl/wdl/blob/master/versions/development/SPEC.md#specifying-workflow-inputs-in-json), cromwell uses a [JSON](https://www.json.org/) formatted file as main input. In MIGNON, this file contains **absolute** paths to the files that are used during the analysis, **decision variables** to control which workflow steps are carried out (e.g. wether to perform or not the variant calling) and **arguments** to control each task execution (e.g. the amount of threads to use for the alignment).
 
-Here you can find an example the content of a MIGNON input JSON file. To build your own input file, please go to the [**preparing the JSON**](#preparing-the-json) section.
+Here you can find an example of the content of a MIGNON input JSON file. To build your own input file, please go to the [**preparing the JSON**](#preparing-the-json) section.
 
 ```
 {
@@ -61,11 +61,11 @@ Here you can find an example the content of a MIGNON input JSON file. To build y
 
 The configuration file tells cromwell how to handle and launch the jobs that make up the workflow. When executing a single job, it places the values from the WDL file in the appropiated position within the container engine command. For example, the `requested_memory` runtime input, which controls the memory that is allocated for the execution of the task, is passed to the `--memory` argument when using `docker run`. On the other hand, when executing the workflow on a HPC environment, the `requested_memory` runime input is used in the submission of the job with `sbatch --mem` (SLURM command). In addition, this file can control other top-level features of cromwell, as for example how the duplicated files are managed or **the number of parallel jobs that can be executed**. You can find more information and examples of the possible backends that can be configured through this file in the [cromwell documentation](https://cromwell.readthedocs.io/en/stable/Configuring/).
 
-To run MIGNON, we have prepared two different configurations files. The first one, [`LocalWithDocker.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/LocalWithDocker.conf), is prepared to run MIGNON locally using docker to execute the containerized software. The second one, [`SlurmAndSingularity.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/SlurmAndSingularity.conf), is intended to be used within HPC environments that use [Slurm](https://slurm.schedmd.com/documentation.html) as workload manager and have [Singularity](https://sylabs.io/docs/) installed as a module to run the containerized software.
+To run MIGNON, we have prepared two different configuration files. The first one, [`LocalWithDocker.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/LocalWithDocker.conf), is prepared to run MIGNON locally using docker to execute the containerized software. The second one, [`SlurmAndSingularity.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/SlurmAndSingularity.conf), is intended to be used within HPC environments that use [Slurm](https://slurm.schedmd.com/documentation.html) as workload manager and have [Singularity](https://sylabs.io/docs/) installed as a module to run the containerized software.
 
 # Execution modes
 
-There are 5 different execution modes of MIGNON. Each of them makes use of a different combination of tools in the intial steps of the workflow. For example, the "salmon-hisat2" execution mode uses [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) to perform the alignment and [Salmon](https://combine-lab.github.io/salmon/) to perform the gene expression quantification from reads. The HISAT2 alignments can then be used to run the variant calling (VC) sub-workflow with [GATK](https://gatk.broadinstitute.org/hc/en-us) to obtain the genomic information. Each mode has a specific computational profile and it should be selected depending on the user needs. In a nutshell, on modes where [STAR] (https://github.com/alexdobin/STAR) is used, the maximum memory requirements and velocity of the alignment are high. On the other hand, on modes where [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) is used the memory requirements and velocity of alignments are lower, allowing more parallel jobs for the same computational price. The following table summarizes the basic properties of each execution mode:
+There are 5 different execution modes of MIGNON. Each of them makes use of a different combination of tools in the intial steps of the workflow. For example, the "salmon-hisat2" execution mode uses [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) to perform the alignment and [Salmon](https://combine-lab.github.io/salmon/) to perform the gene expression quantification from reads. The HISAT2 alignments can then be used to run the variant calling (VC) sub-workflow with [GATK](https://gatk.broadinstitute.org/hc/en-us) to obtain the genomic information. Each mode has a specific computational profile and it should be selected depending on the user needs. In a nutshell, on modes where [STAR] (https://github.com/alexdobin/STAR) is used, the maximum memory requirements and velocity of the alignment are high. But, on modes where [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) is employed the memory requirements and velocity of alignments are lower, allowing more parallel jobs for the same computational price. The following table summarizes the basic properties of each execution mode:
 
 | Execution mode  | Alignment | Quantification | Allows VC |
 |-----------------|-----------|----------------|-----------|
@@ -75,11 +75,11 @@ There are 5 different execution modes of MIGNON. Each of them makes use of a dif
 | "star"          | STAR      | featureCounts  | Yes       |
 | "salmon"        | -         | Salmon         | No        |
 
-In addition, the following figure shows which steps of the workflow are carried out under each execution mode:
+The following figure shows which steps of the workflow are carried out under each execution mode:
 
 ![execution_modes](img/MIGNON_modes.svg)
 
-**Depending on the execution modes, the required values in the input JSON can change**. We strongly recommend to use the combined execution modes “salmon-star” or “salmon-hisat2”, as they use the pseudo-alignment strategy to quantify gene expression dealing with the multi-mapping reads problem, and star or hisat2 to obtain the alignments for the variant calling sub-workflow. 
+**Depending on the execution modes, the required values in the input JSON can change**. We strongly recommend using the combined execution modes “salmon-star” or “salmon-hisat2”, as they use the pseudo-alignment strategy to quantify gene expression dealing with the multi-mapping reads problem, and star or hisat2 to obtain the alignments for the variant calling sub-workflow. 
 
 # Preparing the JSON
 
@@ -87,7 +87,7 @@ As explained before, the JSON file is used to store and register the file paths,
 
 ## Required values
 
-The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling as for example the aligner (HISAT2/STAR) indexes or the reference genome. The following table contains the basic information about each value, the execution modes where it is required and its description. The "preferred source" column details the source for the reference material that was used for running the workflow.
+The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling as the aligner indexes or reference genome. The following table contains the basic information about each value, the execution modes where it is required and its description. The "preferred source" column details the source for the reference material that was used for running the workflow.
 
 | Input               | Required at                                     | Variable type | File format | Description                                                                                                                                                                                                                                                  | Preferred source                                                                                                      |
 |---------------------|-------------------------------------------------|---------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -118,11 +118,11 @@ The values detailed in this section are mandatory and will vary depending on the
 
 ## Default values
 
-Some inputs have a default value that can be (or not) modified by users. This section comprises different type of inputs, from those able to modify the threads and memory used by the different softwares that make up the pipeline, to default values that are used in the multi-omic integrative.
+Some inputs have a default value that can be modified (or not) by users. This section comprises different types of input, from those able to modify the threads and memory used by the different softwares that make up the pipeline, to default values that are used in the multi-omic integrative.
 
 ### Execution values
 
-As mentioned, some of the default values have the ability to modify the computational resources that every software uses to carry out a particular task within the workflow. In this group we have mainly three types of values: **cpu**, **mem** and **additional_parameters**. The **cpu** value is placed in the proper position on each command of the workflow, to modify, when possible, the number of threads used by the tool that is used in the task. **mem** indicates the amount of memory that is allocated to the execution of this task. Finally, **additional_parameters** allow users to include additional options for the execution of some tools within the workflow. All the execution inputs are defined with the same structure:
+As mentioned before, some of the default values have the ability to modify the computational resources that every software uses to carry out a particular task within the workflow. In this group we have mainly three types of values: **cpu**, **mem** and **additional_parameters**. The **cpu** value is placed in the proper position on each command of the workflow, to modify, when possible, the number of threads used by the tool that is used in the task. **mem** indicates the amount of memory that is allocated to the execution of this task. Finally, **additional_parameters** allow users to include additional options for the execution of some tools within the workflow. All the execution inputs are defined with the same structure:
 
 *nameOfTheTask*_*value*
 
@@ -173,7 +173,7 @@ As an example, to modify the execution of STAR, users can indicate threads, memo
 "MIGNON.star_additional_parameters": "--limitBAMsortRAM 60359738368 --runRNGseed 333"
 ```
 
-In addition to these, the **haplotype_scatter_count** value requires a special mention. As explained in the advanced section, this parameter allows users to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divide to perform the variant calling from aligned reads.
+In addition to these, the **haplotype_scatter_count** value requires a special mention. As explained in the advanced section, this parameter allows users to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divided to perform the variant calling from aligned reads.
 
 ### Other values
 
@@ -181,6 +181,7 @@ Finally, there are some default values that are used to filter annotated variant
 
 ```
 # normalization and values
+Boolean? filter_unmapped = true
 String? salmon_library_type = "A"
 Int? edger_min_counts = 15  
 Boolean? hipathia_normalize = true    
@@ -202,11 +203,12 @@ Those that actually have an impact on the output of the pipeline are detailed in
 
 | Input               | Variable type | Default value | Description                                                                                                                                                                                                                                                                                                                                  |
 |---------------------|---------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| filter_unmapped     | Boolean       |      TRUE     | Wether to filter or not unmapped reads from alignment files.                                                                                                                                                                                                                                                                                 |
 | salmon_library_type | String        | A             | Library type for salmon quantification. Defaults to "A" (automatic detection).                                                                                                                                                                                                                                                               |
 | edger_min_counts    | Int           |            15 | Minimum counts per gene. This parameter will be used to filter the count matrix before the differential expression analysis. By default, all those genes with less than 15 counts across all samples will be filtered.                                                                                                                       |
-| hipathia_normalize  | Boolean       | "true"        | Normalize circuit pathway activity by length? HiPathia applies a signal propagation algorithm across the different receptor-effector circuits in the pathways to calculate the signaling circuit activity. The topology and diameter of such circuits influence the resulting circuit activity values, so this normalization is recommended. |
-| hipathia_ko_factor  | Float         | 0.01          | LoF variants knockdown factor. This parameter control the number by which the normalized expression values are multiplied when a loss of function (LoF) variant is detected for a gene/sample.                                                                                                                                               |
-| vep_sift_cutoff     | Float         | 0.05          | Sift cutoff value. In combination with **vep_polyphen_cutoff**, it is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
-| vep_polyphen_cutoff | Float         | 0.95          | Polyphen cutoff value. In combination with **vep_sift_cutoff**, it is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
+| hipathia_normalize  | Boolean       |      TRUE     | Normalize circuit pathway activity by length? HiPathia applies a signal propagation algorithm across the different receptor-effector circuits in the pathways to calculate the signaling circuit activity. The topology and diameter of such circuits influence the resulting circuit activity values, so this normalization is recommended. |
+| hipathia_ko_factor  | Float         | 0.01          | LoF variants knockdown factor. This parameter controls the number by which the normalized expression values are multiplied when a loss of function (LoF) variant is detected for a gene/sample.                                                                                                                                               |
+| vep_sift_cutoff     | Float         | 0.05          | Sift cutoff value. In combination with **vep_polyphen_cutoff**, is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
+| vep_polyphen_cutoff | Float         | 0.95          | Polyphen cutoff value. In combination with **vep_sift_cutoff**, is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
 
 For more information about the integrative strategy that is performed in MIGNON, please read the article that accompanies this software.
