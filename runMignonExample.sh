@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# check docker
+if ! docker -v COMMAND &> /dev/null
+then
+    echo "Docker not found!"
+    exit
+fi
+
+# check java
+if ! java -v COMMAND &> /dev/null
+then
+    echo "Java not found!"
+    exit
+fi
+
 # prepare test data
 echo "MIGNON: Preparing test data..."
 curlImage="tutum/curl:trusty"

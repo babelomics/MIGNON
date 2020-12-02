@@ -26,8 +26,3 @@ bash runMignonExample.sh
 
 After completing the dry runs, the results of the pipeline can be found at the `dry_run/cromwell-executions` directory. 
 
-## Citation
-
-If you use this software, please cite:
-
-
