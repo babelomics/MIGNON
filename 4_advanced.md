@@ -95,9 +95,8 @@ scatter (idx in range(len_fastq)) {
 				sample_id = sample,
 				output_counts = sample + "_counts.tsv",
 				cpu = 1,
-				mem = "16G",
-				additional_parameters = ""
-
+				mem = "16G"
+        
 		}
 
 	}
