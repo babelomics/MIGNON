@@ -59,13 +59,13 @@ Here you can find an example of the content of a MIGNON input JSON file. To buil
 
 ## Cromwell configuration file
 
-The configuration file tells cromwell how to handle and launch the jobs that make up the workflow. When executing a single job, it places the values from the WDL file in the appropiated position within the container engine command. For example, the `requested_memory` runtime input, which controls the memory that is allocated for the execution of the task, is passed to the `--memory` argument when using `docker run`. On the other hand, when executing the workflow on a HPC environment, the `requested_memory` runime input is used in the submission of the job with `sbatch --mem` (SLURM command). In addition, this file can control other top-level features of cromwell, as for example how the duplicated files are managed or **the number of parallel jobs that can be executed**. You can find more information and examples of the possible backends that can be configured through this file in the [cromwell documentation](https://cromwell.readthedocs.io/en/stable/Configuring/).
+The configuration file tells cromwell how to handle and launch the jobs that make up the workflow. When executing a single job, it places the values from the WDL file in the appropiated position within the container engine command. For example, the `requested_memory` runtime input, which controls the memory that is allocated for the execution of the task, is passed to the `--memory` argument when using `docker run`. On the other hand, when executing the workflow on a HPC environment, the `requested_memory` runime input is used in the submission of the job with `sbatch --mem` (SLURM command). In addition, this file can control other top-level features of cromwell, as for example how the duplicated files are managed or **the number of parallel jobs that can be executed**. Users can find more information about possible backends that can be configured through this file in the [cromwell documentation](https://cromwell.readthedocs.io/en/stable/Configuring/).
 
-To run MIGNON, we have prepared two different configuration files. The first one, [`LocalWithDocker.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/LocalWithDocker.conf), is prepared to run MIGNON locally using docker to execute the containerized software. The second one, [`SlurmAndSingularity.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/SlurmAndSingularity.conf), is intended to be used within HPC environments that use [Slurm](https://slurm.schedmd.com/documentation.html) as workload manager and have [Singularity](https://sylabs.io/docs/) installed as a module to run the containerized software.
+To run MIGNON, we have prepared two different configuration files. The first one, [`LocalWithDocker.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/LocalWithDocker.conf), is used to run MIGNON locally using docker to execute the containerized software. The second one, [`SlurmAndSingularity.conf`](https://github.com/babelomics/MIGNON/blob/master/configs/SlurmAndSingularity.conf), is intended to be used within HPC environments that use [Slurm](https://slurm.schedmd.com/documentation.html) as workload manager and have [Singularity](https://sylabs.io/docs/) installed as a module to run the containerized software.
 
 # Execution modes
 
-There are 5 different execution modes of MIGNON. Each of them makes use of a different combination of tools in the intial steps of the workflow. For example, the "salmon-hisat2" execution mode uses [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) to perform the alignment and [Salmon](https://combine-lab.github.io/salmon/) to perform the gene expression quantification from reads. The HISAT2 alignments can then be used to run the variant calling (VC) sub-workflow with [GATK](https://gatk.broadinstitute.org/hc/en-us) to obtain the genomic information. Each mode has a specific computational profile and it should be selected depending on the user needs. In a nutshell, on modes where [STAR] (https://github.com/alexdobin/STAR) is used, the maximum memory requirements and velocity of the alignment are high. But, on modes where [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) is employed the memory requirements and velocity of alignments are lower, allowing more parallel jobs for the same computational price. The following table summarizes the basic properties of each execution mode:
+There are 5 different execution modes of MIGNON. Each of them makes use of a different combination of tools in the intial steps of the workflow. For example, the "salmon-hisat2" execution mode uses [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) to perform the alignment and [Salmon](https://combine-lab.github.io/salmon/) to perform gene expression quantification from reads. The HISAT2 alignments can then be used to run the variant calling (VC) sub-workflow with [GATK](https://gatk.broadinstitute.org/hc/en-us) to obtain the genomic information. Each mode has a specific computational profile and it should be selected depending on the user needs. In a nutshell, on modes where [STAR](https://github.com/alexdobin/STAR) is used, the maximum memory requirements and velocity of the alignment are high. But, on modes where [HISAT2](http://www.ccb.jhu.edu/software/hisat/index.shtml) is employed, the memory requirements and velocity of alignments are lower, allowing a higher number of parallel jobs for the same computational price. The following table summarizes the basic properties of each execution mode:
 
 | Execution mode  | Alignment | Quantification | Allows VC |
 |-----------------|-----------|----------------|-----------|
@@ -75,7 +75,7 @@ There are 5 different execution modes of MIGNON. Each of them makes use of a dif
 | "star"          | STAR      | featureCounts  | Yes       |
 | "salmon"        | -         | Salmon         | No        |
 
-The following figure shows which steps of the workflow are carried out under each execution mode:
+In addition, the following figure shows which steps of the workflow are carried out under each execution mode:
 
 ![execution_modes](img/MIGNON_modes.svg)
 
@@ -83,11 +83,11 @@ The following figure shows which steps of the workflow are carried out under eac
 
 # Preparing the JSON
 
-As explained before, the JSON file is used to store and register the file paths, workflow variables and execution parameters. For MIGNON, the values that should be included in this file can be divided in two different categories: [Required values](#required-values) and [default values](#default-values).
+The JSON file is used to store and register the file paths, workflow variables and execution parameters. For MIGNON, the values that should be included in this file can be divided in two different categories: [Required values](#required-values) and [default values](#default-values).
 
 ## Required values
 
-The values detailed in this section are mandatory and will vary depending on the execution mode. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling as the aligner indexes or reference genome. The following table contains the basic information about each value, the execution modes where it is required and its description. The "preferred source" column details the source for the reference material that was used for running the workflow.
+**The values detailed in this section are mandatory and will vary depending on the execution mode**. Apart from the input reads or sample ids, it is important to pay attention to the different reference material that is required to perform the alignment, pseudo-alignment or variant calling. The following table contains the basic information about each value and the execution modes where it is required. The *"preferred source"* column details the source for the reference material that was used for running the workflow.
 
 | Input               | Required at                                     | Variable type | File format | Description                                                                                                                                                                                                                                                  | Preferred source                                                                                                      |
 |---------------------|-------------------------------------------------|---------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -118,7 +118,7 @@ The values detailed in this section are mandatory and will vary depending on the
 
 ## Default values
 
-Some inputs have a default value that can be modified (or not) by users. This section comprises different types of input, from those able to modify the threads and memory used by the different softwares that make up the pipeline, to default values that are used in the multi-omic integrative.
+Some inputs have a default value that can be modified (or not) by users. This section comprises different types of input, from those able to modify the threads and memory used by the tools to default values that are used in the multi-omic integrative step.
 
 ### Execution values
 

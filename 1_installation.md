@@ -19,7 +19,7 @@ On the other hand, we encourage users with less experience to fully read the ins
 
 # Requirements
 
-From a programmatic perspective, MIGNON is a chain of tasks written in the [Workflow Description Language](https://github.com/openwdl/wdl). Users need to install and download the following software to be able to run it:
+From a computing perspective, MIGNON is a chain of tasks written in the [Workflow Description Language](https://github.com/openwdl/wdl). Users need to install and download the following software to be able to run it:
 
 ## [Java](https://www.java.com/es/download/)
 
@@ -34,7 +34,7 @@ OpenJDK 64-Bit Server VM (build 25.275-b01, mixed mode)
 
 ## [Docker](https://www.docker.com/)
 
-Docker (or any engine able to run docker containers, as [Singularity](https://sylabs.io/docs/) is used to execute all the tasks of the workflow within an isolated unit of containerized software, freeing users to install each of the needed components of the pipeline. Once installed, users should be able to get the following output after executing `docker run hello-world`:
+Docker (or any engine able to run docker containers, as [Singularity](https://sylabs.io/docs/)) is used to execute all the tasks of the workflow within an isolated unit of containerized software, freeing users to install each of the needed components of the pipeline. Once installed, users should be able to get the following output after executing `docker run hello-world`:
 
 ```
 $ docker run hello-world
@@ -63,7 +63,7 @@ For more examples and ideas, visit:
 
 ## [Cromwell](https://github.com/broadinstitute/cromwell)
 
-Users need to download the **cromwell-XX.jar** file that can be retrieved from the cromwell releases page. Particularly, MIGNON was tested with the release 47 of cromwell, which can be obtained in the [following link](https://github.com/broadinstitute/cromwell/releases/tag/47). Cromwell is the scientific workflow engine that interprets and executes the pipeline. It is the software why users need to have Java v1.8.0 installed. **Note**: When executing the `runMignonExample.sh` script, a copy of the cromwell binaries is downloaded together with the example data.
+Users need to download the **cromwell-XX.jar** file that can be retrieved from the [cromwell releases page](https://github.com/broadinstitute/cromwell/releases/). Particularly, MIGNON was tested with the release 47 of cromwell, which can be obtained in the [following link](https://github.com/broadinstitute/cromwell/releases/tag/47). Cromwell is the scientific workflow engine that interprets and executes the pipeline. It is the software why users need to have Java v1.8.0 installed. **Note**: When executing the `runMignonExample.sh` script, a copy of the cromwell binaries is downloaded together with the example data.
 
 ## [MIGNON](https://github.com/babelomics/MIGNON/)
 
@@ -74,13 +74,13 @@ $ git clone https://github.com/babelomics/MIGNON.git
 ```
 On the other hand, if you are not using git, you can get a zipped version of the code on the following link:
 
-* [----> **Link to the compressed version of MIGNON** <----](https://github.com/babelomics/MIGNON/archive/master.zip).
+* [----> **Download MIGNON** <----](https://github.com/babelomics/MIGNON/archive/master.zip).
 
 # Run the workflow
 
 ## Dry run
 
-After fulfilling all the requirements, users can test the workflow by performing a *dry run* with example data. This can be done by calling the `runMignonExample.sh` script that is located in the root directory of the repo. To do so, please execute the following command within the MIGNON folder:
+After meeting all the requirements, users can test the workflow by performing a *dry run* with example data. This can be done by calling the `runMignonExample.sh` script that is located in the root directory of the repo. To do so, please execute the following command within the MIGNON folder:
 
 ```
 $ bash runMignonExample.sh
@@ -106,7 +106,7 @@ MIGNON: Success!! Dry run completed. You are ready to execute MIGNON.
 
 ## Regular run
 
-Although the dry run is very useful to test that all the MIGNON dependencies were installed successfully, users need to prepare their inputs to perform a regular run of the pipeline. To guide users through the different inputs required by MIGNON, we have prepared the [input section](2_input.md). Once the input is prepared in the JSON format, users can run the workflow by executing the following command in a terminal:
+Although the dry run is useful to test that all the MIGNON dependencies were installed successfully, users need to prepare their inputs to perform a regular run of the pipeline. To guide users through the different inputs required by MIGNON, we have prepared the [input section](2_input.md). Once the JSON input is prepared, users can run the workflow by executing the following command in a terminal:
 
 ```
 $ java -Dconfig.file=/path/to/config_file.conf -jar /path/to/cromwell.jar run /path/to/MIGNON.wdl -i /path/to/input.json
@@ -114,4 +114,4 @@ $ java -Dconfig.file=/path/to/config_file.conf -jar /path/to/cromwell.jar run /p
 
 ## Troubleshooting
 
-If you have any doubt about MIGNON features, inputs and outputs, please contact us on the [issues](https://github.com/babelomics/MIGNON/issues) section! On the other hand, if you have trouble installing or executing Java, Docker or Cromwell, we encourage users to use their respective forums to address their questions. Finally, we strongly recommend to read the [5 minutes introduction](https://cromwell.readthedocs.io/en/stable/tutorials/FiveMinuteIntro/) to cromwell written by the developers of the tool.
+If you have any doubt about MIGNON features, inputs and outputs, please contact us on the [github issues](https://github.com/babelomics/MIGNON/issues) section! On the other hand, if you have trouble installing or executing Java, Docker or Cromwell, we encourage users to use their respective forums to address their questions. Finally, we strongly recommend to read the [5 minutes introduction](https://cromwell.readthedocs.io/en/stable/tutorials/FiveMinuteIntro/) to cromwell written by the developers of the tool.
