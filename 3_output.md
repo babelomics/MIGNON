@@ -3,13 +3,13 @@ layout: default
 title: Output
 ---
 
+As described in the **tool manuscript**, the main output of the workflow consists of two tab separated tables that can be found in the `call-hipathia` directory created by cromwell when using the default parameters.
+
 # Signaling circuit activities 
 
 File: `path_values.tsv`
 
-As described in the **tool manuscript**, the main output of the workflow consists of two tab separated tables that can be found in the `call-hipathia` directory created by cromwell when using the default parameters. The first one is a matrix that contains the signaling circuit activity estimations performed by [hipathia](http://hipathia.babelomics.org/) after applying the signaling propagation algorithm.
-
-Here users can find an example of the structure of such files, where rows are signaling circuit (identified by the hipathia ID) and the columns correspond to samples:
+The first one is a matrix that contains the signaling circuit activity estimations performed by [hipathia](http://hipathia.babelomics.org/) after applying the signaling propagation algorithm. Users can find an example in the following table, where rows are signaling circuit (identified by the hipathia ID) and the columns correspond to samples:
 
 |               | ERR3481954 | ERR3481955 | ERR3481956 | ERR3481957 |
 |---------------|------------|------------|------------|------------|
@@ -23,7 +23,7 @@ Here users can find an example of the structure of such files, where rows are si
 | P-hsa03320-55 | 0.3917     | 0.3999     | 0.4006     | 0.4027     |
 | P-hsa03320-56 | 0.2252     | 0.2238     | 0.2306     | 0.2976     |
 
-Users can employ this matrix as a substitution of the gene expression matrix for downstream analyses as principal component analysis (PCA) or clustering. In addition, interactive tools such as [morpheus](https://software.broadinstitute.org/morpheus/) can help users without programming experience get rich visualizations using only a web browser.
+Users can employ this matrix as a substitution of the gene expression matrix for downstream analyses as principal component analysis (PCA), or clustering of samples. In addition, interactive tools such as [morpheus](https://software.broadinstitute.org/morpheus/) can help users without programming experience to get rich visualizations using the web browser.
 
 # Differential signaling results
 
@@ -44,7 +44,7 @@ An example of the differential signaling results can be found in the following t
 
 # Other outputs
 
-In addition to the main outputs, users can find additional results for all the intermediate steps carried out during MIGNON runs. In this sense, here you can find a list of other outputs that may be of interest:
+In addition to the main outputs, users can find additional results for all the intermediate steps carried out during MIGNON runs. Those that can be more useful for alternative analyses are detailed below:
 
 1. **Count matrix**: This tab separated table can be found in the `call-featureCounts` or in the `call-tximport` directories with the name `counts.tsv`. The directory will vary depending on the selected execution mode (please see [execution modes](2_input.md#execution-modes) for more information). It contains the raw values that are passed to edgeR to perform the normalization and differential expression analysis. It contains a value for all the genes in the annotation file. In this table, rows are genes and columns are samples. 
 

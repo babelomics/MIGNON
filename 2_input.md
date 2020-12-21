@@ -122,11 +122,11 @@ Some inputs have a default value that can be modified (or not) by users. This se
 
 ### Execution values
 
-As mentioned before, some of the default values have the ability to modify the computational resources that every software uses to carry out a particular task within the workflow. In this group we have mainly three types of values: **cpu**, **mem** and **additional_parameters**. The **cpu** value is placed in the proper position on each command of the workflow, to modify, when possible, the number of threads used by the tool that is used in the task. **mem** indicates the amount of memory that is allocated to the execution of this task. Finally, **additional_parameters** allow users to include additional options for the execution of some tools within the workflow. All the execution inputs are defined with the same structure:
+Some of the default values have the ability to modify the computational resources that every software uses to carry out a particular task within the workflow. In this group we have mainly three types of values: **cpu**, **mem** and **additional_parameters**. The **cpu** value is placed in the proper position on each command of the workflow, to modify, when possible, the number of threads used by the tool that performs the task. **mem** indicates the amount of memory that is allocated to the execution of this task. Finally, **additional_parameters** allow users to include additional arguments to the execution of some tools within the workflow. All the execution inputs are defined with the same structure:
 
 *nameOfTheTask*_*value*
 
-And can be found in the following list.
+And can be found in the following list:
 
 ```
 Int? fastp_cpu = 1
@@ -165,7 +165,7 @@ String? filterBam_mem = "16G"
 String? filterBam_additional_parameters = ""
 ```
 
-As an example, to modify the execution of STAR, users can indicate threads, memory and include additional arguments by including the following lines in the input JSON.
+For example, to modify the execution of STAR, users can indicate threads, memory and include additional arguments by including the following lines in the input JSON.
 
 ```
 "MIGNON.star_cpu": 4,
@@ -173,14 +173,14 @@ As an example, to modify the execution of STAR, users can indicate threads, memo
 "MIGNON.star_additional_parameters": "--limitBAMsortRAM 60359738368 --runRNGseed 333"
 ```
 
-In addition to these, the **haplotype_scatter_count** value requires a special mention. As explained in the advanced section, this parameter allows users to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divided to perform the variant calling from aligned reads.
+In addition to these, the **haplotype_scatter_count** value requires a special mention. As explained in the [advanced section](4_advanced.md), this parameter allows users to apply the [scatter and gather strategy](https://gatk.broadinstitute.org/hc/en-us/articles/360035532012-Parallelism-Multithreading-Scatter-Gather) to parallelize the **GATK HaplotypeCaller** sub-task. This input will determine the number of chunks in which the reference genome is divided to perform the variant calling from aligned reads.
 
 ### Other values
 
-Finally, there are some default values that are used to filter annotated variants and to perform the *in silico* knockdown of genes that are affected by those. Additionally, there are additional defaults that are required to perform some of the tasks but that do not have an impact in the output. All of them can be found in the following section.
+There are some default values that are used to filter annotated variants and perform the *in silico* knockdown of genes that are affected by those. In addition, other defaults are required for the execution of the tasks but do not have a direct impact in the output. All of them can be found in the following section.
 
 ```
-# normalization and values
+# variant filtration and knockdown values
 Boolean? filter_unmapped = true
 String? salmon_library_type = "A"
 Int? edger_min_counts = 15  
@@ -211,4 +211,4 @@ Those that actually have an impact on the output of the pipeline are detailed in
 | vep_sift_cutoff     | Float         | 0.05          | Sift cutoff value. In combination with **vep_polyphen_cutoff**, is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
 | vep_polyphen_cutoff | Float         | 0.95          | Polyphen cutoff value. In combination with **vep_sift_cutoff**, is used to filter variants that will be considered as deleterious (LoF).                                                                                                                                                                                                  |
 
-For more information about the integrative strategy that is performed in MIGNON, please read the article that accompanies this software.
+For more information about the integrative strategy applied by MIGNON, please read the article that accompanies this software.
