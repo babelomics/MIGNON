@@ -26,3 +26,9 @@ bash runMignonExample.sh
 
 After completing the dry runs, the results of the pipeline can be found at the `dry_run/cromwell-executions` directory. 
 
+## Citation
+
+If you use MIGNON, please cite:
+
+> Garrido-Rodriguez M, Lopez-Lopez D, Ortuno FM, Peña-Chilet M, Muñoz E, Calzado MA, Dopazo J. A versatile workflow to integrate RNA-seq genomic and transcriptomic data into mechanistic models of signaling pathways. PLoS Comput Biol. 2021 Feb 11;17(2):e1008748. doi: 10.1371/journal.pcbi.1008748. Epub ahead of print. PMID: 33571195.
+
