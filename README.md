@@ -1,6 +1,6 @@
 [![MIGNON](img/MIGNON_logo_horizontal.svg)](https://babelomics.github.io/MIGNON/)
 
-[![Build Status](https://travis-ci.com/babelomics/MIGNON.svg?branch=master)](https://travis-ci.com/babelomics/MIGNON)
+> **Note:** This repository corresponds to the version of MIGNON associated with the publication. The currently maintained and updated version can be found at [github.com/garridolab/MIGNON](https://github.com/garridolab/MIGNON).
 
 _**M**echanistic **I**nte**G**rative a**N**alysis **O**f r**N**a-seq data_
 
